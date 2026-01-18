@@ -1,0 +1,24 @@
+{
+	"first_names": [
+		"Alex", "Blake", "Casey", "Dana", "Eden",
+		"Finley", "Gray", "Harper", "Indigo", "Jordan",
+		"Kennedy", "Logan", "Morgan", "Noah", "Oakley",
+		"Parker", "Quinn", "Riley", "Sage", "Taylor",
+		"Uma", "Val", "Winter", "Xander", "Yuki", "Zion",
+		"Avery", "Bailey", "Charlie", "Drew", "Ellis",
+		"Frances", "Gray", "Haven", "Ira", "Jules",
+		"Kai", "Lane", "Marlowe", "Nico", "Onyx",
+		"Phoenix", "Reese", "Skyler", "Tatum", "Wren"
+	],
+	"last_names": [
+		"Anderson", "Brooks", "Chen", "Davis", "Evans",
+		"Foster", "Garcia", "Hayes", "Ishii", "Jones",
+		"Kim", "Lee", "Martinez", "Nguyen", "Okonkwo",
+		"Patel", "Quinn", "Rivera", "Singh", "Torres",
+		"Ueda", "Vasquez", "Williams", "Xavier", "Yang", "Zhang",
+		"Abbott", "Bell", "Cruz", "Diaz", "Edwards",
+		"Flynn", "Green", "Hughes", "Ito", "Jackson",
+		"Khan", "Lopez", "Moore", "Nakamura", "O'Brien",
+		"Park", "Reed", "Sanchez", "Thompson", "Weber"
+	]
+}

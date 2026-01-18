@@ -1,0 +1,94 @@
+{
+	"levels": [
+		{
+			"id": 1,
+			"name": "Eye Color Basics",
+			"description": "Learn epistasis and dominance with 3 eye color genes",
+			"active_genes": ["TYR", "OCA2", "HERC2"],
+			"traits_displayed": ["eye_color"],
+			"max_punnett_genes": 2,
+			"starter_humans": [
+				{
+					"genotype": {"TYR": ["A","A"], "OCA2": ["B","B"], "HERC2": ["G","g"]},
+					"name": "Parent Alpha"
+				},
+				{
+					"genotype": {"TYR": ["A","a"], "OCA2": ["b","b"], "HERC2": ["g","g"]},
+					"name": "Parent Beta"
+				}
+			]
+		},
+		{
+			"id": 2,
+			"name": "Eye Color Advanced",
+			"description": "Add TYRP1 for intensity variation",
+			"active_genes": ["TYR", "OCA2", "HERC2", "TYRP1"],
+			"traits_displayed": ["eye_color"],
+			"max_punnett_genes": 2,
+			"starter_humans": [
+				{
+					"genotype": {"TYR": ["A","a"], "OCA2": ["B","b"], "HERC2": ["G","g"], "TYRP1": ["H","h"]},
+					"name": "Parent Alpha"
+				},
+				{
+					"genotype": {"TYR": ["A","a"], "OCA2": ["b","b"], "HERC2": ["g","g"], "TYRP1": ["h","h"]},
+					"name": "Parent Beta"
+				}
+			]
+		},
+		{
+			"id": 3,
+			"name": "Skin Tone",
+			"description": "Introduce skin pigmentation genes",
+			"active_genes": ["TYR", "OCA2", "SLC24A5", "SLC45A2"],
+			"traits_displayed": ["eye_color", "skin_tone"],
+			"max_punnett_genes": 2,
+			"starter_humans": [
+				{
+					"genotype": {"TYR": ["A","A"], "OCA2": ["B","B"], "SLC24A5": ["D","D"], "SLC45A2": ["E","E"]},
+					"name": "Parent Alpha"
+				},
+				{
+					"genotype": {"TYR": ["A","a"], "OCA2": ["b","b"], "SLC24A5": ["d","d"], "SLC45A2": ["e","e"]},
+					"name": "Parent Beta"
+				}
+			]
+		},
+		{
+			"id": 4,
+			"name": "Hair Color",
+			"description": "Add red hair gene (MC1R) and hair darkness (TYRP1)",
+			"active_genes": ["TYR", "OCA2", "TYRP1", "MC1R"],
+			"traits_displayed": ["eye_color", "hair_color"],
+			"max_punnett_genes": 2,
+			"starter_humans": [
+				{
+					"genotype": {"TYR": ["A","A"], "OCA2": ["B","B"], "TYRP1": ["H","H"], "MC1R": ["r","r"]},
+					"name": "Parent Alpha"
+				},
+				{
+					"genotype": {"TYR": ["A","a"], "OCA2": ["b","b"], "TYRP1": ["h","h"], "MC1R": ["R","r"]},
+					"name": "Parent Beta"
+				}
+			]
+		},
+		{
+			"id": 5,
+			"name": "Complete Human Variation",
+			"description": "All traits with hair texture",
+			"active_genes": ["TYR", "OCA2", "HERC2", "TYRP1", "SLC24A5", "SLC45A2", "MC1R", "TCHH"],
+			"traits_displayed": ["eye_color", "skin_tone", "hair_color", "hair_texture"],
+			"max_punnett_genes": 2,
+			"starter_humans": [
+				{
+					"genotype": {"TYR": ["A","A"], "OCA2": ["B","b"], "HERC2": ["G","g"], "TYRP1": ["H","h"], "SLC24A5": ["D","d"], "SLC45A2": ["E","e"], "MC1R": ["r","r"], "TCHH": ["C","C"]},
+					"name": "Parent Alpha"
+				},
+				{
+					"genotype": {"TYR": ["A","a"], "OCA2": ["b","b"], "HERC2": ["g","g"], "TYRP1": ["h","h"], "SLC24A5": ["d","d"], "SLC45A2": ["e","e"], "MC1R": ["R","r"], "TCHH": ["c","c"]},
+					"name": "Parent Beta"
+				}
+			]
+		}
+	]
+}

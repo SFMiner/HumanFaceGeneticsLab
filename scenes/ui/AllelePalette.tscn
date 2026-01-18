@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://callpal001scn"]
+
+[ext_resource type="Script" path="res://scripts/ui/AllelePalette.gd" id="1_palette"]
+
+[node name="AllelePalette" type="PanelContainer"]
+custom_minimum_size = Vector2(200, 150)
+offset_right = 200.0
+offset_bottom = 150.0
+script = ExtResource("1_palette")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8

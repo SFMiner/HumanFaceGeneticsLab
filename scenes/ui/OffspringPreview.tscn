@@ -1,0 +1,120 @@
+[gd_scene load_steps=2 format=3 uid="uid://p7kfl1s05v07"]
+
+[ext_resource type="Script" uid="uid://ccegbvjpsi5h1" path="res://scripts/ui/OffspringPreview.gd" id="1_preview"]
+
+[node name="OffspringPreview" type="PanelContainer"]
+custom_minimum_size = Vector2(280, 230)
+offset_right = 573.0
+offset_bottom = 228.0
+script = ExtResource("1_preview")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "Offspring Result"
+horizontal_alignment = 1
+
+[node name="FaceContainer" type="CenterContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FacePlaceholder" type="ColorRect" parent="MarginContainer/HBoxContainer/VBoxContainer2/FaceContainer"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+color = Color(0.2, 0.2, 0.2, 1)
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="SaveButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+layout_mode = 2
+text = "Save to Library"
+
+[node name="NameInput" type="LineEdit" parent="MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter name..."
+
+[node name="RandomNameButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+visible = false
+layout_mode = 2
+tooltip_text = "Random Name"
+text = "🎲"
+
+[node name="ConfirmButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+visible = false
+layout_mode = 2
+tooltip_text = "Confirm Save"
+text = "✓"
+
+[node name="CancelButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+visible = false
+layout_mode = 2
+tooltip_text = "Cancel"
+text = "✗"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="PhenotypeContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="EyeLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer"]
+layout_mode = 2
+text = "Eyes: --"
+
+[node name="SkinLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer"]
+layout_mode = 2
+text = "Skin: --"
+
+[node name="HairColorLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer"]
+layout_mode = 2
+text = "Hair: --"
+
+[node name="HairTextureLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer"]
+layout_mode = 2
+text = "Texture: --"
+
+[node name="GenotypeContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="GenotypeTitle" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/GenotypeContainer"]
+layout_mode = 2
+text = "Genotype:"
+
+[node name="GenotypeLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/GenotypeContainer"]
+layout_mode = 2
+text = "--"
+autowrap_mode = 2
+
+[node name="ProbabilityContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ProbTitle" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/ProbabilityContainer"]
+layout_mode = 2
+text = "Expected Phenotype Ratios:"
+horizontal_alignment = 1
+
+[node name="ProbabilityList" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer/ProbabilityContainer"]
+layout_mode = 2

@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpungrid001scn"]
+
+[ext_resource type="Script" path="res://scripts/ui/PunnettGrid.gd" id="1_grid"]
+
+[node name="PunnettGrid" type="PanelContainer"]
+custom_minimum_size = Vector2(400, 300)
+offset_right = 400.0
+offset_bottom = 300.0
+script = ExtResource("1_grid")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Punnett Square"
+horizontal_alignment = 1
+
+[node name="ModeLabel" type="Label" parent="VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+text = "(2×2)"
+
+[node name="GridContainer" type="GridContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+
+[node name="RatioPanel" type="PanelContainer" parent="VBox"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RatioVBox" type="VBoxContainer" parent="VBox/RatioPanel"]
+layout_mode = 2
+
+[node name="RatioTitle" type="Label" parent="VBox/RatioPanel/RatioVBox"]
+layout_mode = 2
+text = "Phenotype Ratios"
+horizontal_alignment = 1
+
+[node name="RatioList" type="VBoxContainer" parent="VBox/RatioPanel/RatioVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MessageLabel" type="Label" parent="VBox"]
+visible = false
+layout_mode = 2
+text = "Select both parents to view Punnett square"
+horizontal_alignment = 1

@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://callelechip"]
+
+[ext_resource type="Script" path="res://scripts/ui/AlleleChip.gd" id="1_chip"]
+
+[node name="AlleleChip" type="PanelContainer"]
+custom_minimum_size = Vector2(80, 28)
+offset_right = 80.0
+offset_bottom = 28.0
+mouse_default_cursor_shape = 2
+script = ExtResource("1_chip")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="GeneLabel" type="Label" parent="HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 11
+text = "TYR:"
+
+[node name="AlleleLabel" type="Label" parent="HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+text = "Aa"
+horizontal_alignment = 1
+
+[node name="RemoveButton" type="Button" parent="HBox"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+text = "×"
+flat = true

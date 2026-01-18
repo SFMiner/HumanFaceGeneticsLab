@@ -1,0 +1,124 @@
+[gd_scene load_steps=7 format=3 uid="uid://xv118j8brm34"]
+
+[ext_resource type="Script" uid="uid://bfb4hwj02xmp0" path="res://scripts/main/GeneticsLab.gd" id="1_main"]
+[ext_resource type="PackedScene" uid="uid://clibpan001scn" path="res://scenes/ui/LibraryPanel.tscn" id="2_library"]
+[ext_resource type="PackedScene" uid="uid://bv3jcvn3xh1cf" path="res://scenes/ui/BreedingArea.tscn" id="3_breeding"]
+[ext_resource type="PackedScene" uid="uid://cvr0adchx0ul0" path="res://scenes/ui/TeacherModePanel.tscn" id="4_teacher"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.15, 0.15, 0.2, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_banner"]
+content_margin_left = 10.0
+content_margin_top = 3.0
+content_margin_right = 10.0
+content_margin_bottom = 3.0
+bg_color = Color(0.29, 0.49, 0.35, 0.9)
+
+[node name="GeneticsLab" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.12, 0.15, 1)
+
+[node name="MainVBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" type="PanelContainer" parent="MainVBox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_topbar")
+
+[node name="VBox" type="VBoxContainer" parent="MainVBox/TopBar"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="MainVBox/TopBar/VBox"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "Human Genetics Lab"
+
+[node name="Spacer" type="Control" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LevelLabel" type="Label" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+text = "Level:"
+
+[node name="LevelDropdown" type="OptionButton" parent="MainVBox/TopBar/VBox/HBox"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="Sep1" type="VSeparator" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+
+[node name="SettingsButton" type="Button" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+text = "Settings"
+
+[node name="Sep2" type="VSeparator" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+
+[node name="TeacherModeButton" type="Button" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+text = "Teacher Mode"
+
+[node name="TeacherModeBanner" type="PanelContainer" parent="MainVBox/TopBar/VBox"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_banner")
+
+[node name="StatusLabel" type="Label" parent="MainVBox/TopBar/VBox/TeacherModeBanner"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Teacher Mode: • Active genes: TYR, OCA2 • Max genes: 2 • Randomness: Seeded"
+
+[node name="MainHBox" type="HBoxContainer" parent="MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LibraryPanel" parent="MainVBox/MainHBox" instance=ExtResource("2_library")]
+layout_mode = 2
+
+[node name="BreedingArea" parent="MainVBox/MainHBox" instance=ExtResource("3_breeding")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FooterDisclaimer" type="Label" parent="MainVBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 11
+text = "Traits shown are not ranked and have no inherent value."
+horizontal_alignment = 1
+
+[node name="TeacherModePanel" parent="." instance=ExtResource("4_teacher")]
+visible = false
+layout_mode = 1
+offset_left = -450.0
+offset_right = 450.0

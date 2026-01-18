@@ -1,0 +1,75 @@
+[gd_scene load_steps=3 format=3 uid="uid://clibpan001scn"]
+
+[ext_resource type="Script" uid="uid://dibfqy2iekf0h" path="res://scripts/ui/LibraryPanel.gd" id="1_library"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.15, 0.17, 0.2, 1)
+border_width_right = 2
+border_color = Color(0.25, 0.27, 0.3, 1)
+
+[node name="LibraryPanel" type="PanelContainer"]
+custom_minimum_size = Vector2(280, 0)
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+script = ExtResource("1_library")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HeaderLabel" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Human Library"
+horizontal_alignment = 1
+
+[node name="Sep1" type="HSeparator" parent="VBox"]
+layout_mode = 2
+
+[node name="SearchBar" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="SearchInput" type="LineEdit" parent="VBox/SearchBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search..."
+
+[node name="FilterDropdown" type="OptionButton" parent="VBox/SearchBar"]
+layout_mode = 2
+
+[node name="Sep2" type="HSeparator" parent="VBox"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CardContainer" type="VBoxContainer" parent="VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="EmptyLabel" type="Label" parent="VBox/ScrollContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+text = "No humans in library.
+Click '+ Generate' to create one!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sep3" type="HSeparator" parent="VBox"]
+layout_mode = 2
+
+[node name="GenerateButton" type="Button" parent="VBox"]
+layout_mode = 2
+text = "+ Generate Random Human"
+
+[node name="Container" type="Container" parent="VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2

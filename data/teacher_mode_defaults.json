@@ -1,0 +1,16 @@
+{
+	"active": false,
+	"active_genes": ["TYR", "OCA2", "HERC2"],
+	"max_genes_per_cross": 2,
+	"punnett_display_mode": "full",
+	"trait_visibility": "both",
+	"breeding_mode": "random",
+	"lock_parents": false,
+	"allow_generation": true,
+	"deterministic_seed": null,
+	"language_enforcement": true,
+	"show_ethical_disclaimer": true,
+	"low_spec_mode": false,
+	"naming_mode": "random",
+	"custom_naming_prefix": "Human"
+}

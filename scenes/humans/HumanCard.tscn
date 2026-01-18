@@ -1,0 +1,77 @@
+[gd_scene load_steps=4 format=3 uid="uid://chumcard001scn"]
+
+[ext_resource type="Script" uid="uid://chumcard001scr" path="res://scripts/humans/HumanCard.gd" id="1_card"]
+[ext_resource type="PackedScene" uid="uid://chumface001scn" path="res://scenes/humans/HumanFace.tscn" id="2_face"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.18, 0.2, 0.23, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.32, 0.35, 1)
+corner_radius_left = 6
+corner_radius_top = 6
+corner_radius_right = 6
+corner_radius_bottom = 6
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+
+[node name="HumanCard" type="PanelContainer"]
+custom_minimum_size = Vector2(120, 180)
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+script = ExtResource("1_card")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="FaceContainer" type="CenterContainer" parent="VBox"]
+custom_minimum_size = Vector2(80, 96)
+layout_mode = 2
+
+[node name="FaceDisplay" parent="VBox/FaceContainer" instance=ExtResource("2_face")]
+custom_minimum_size = Vector2(80, 96)
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Human Name"
+theme_override_font_sizes/font_size = 11
+horizontal_alignment = 1
+text_overrun_behavior = 3
+
+[node name="TraitsLabel" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 9
+text = "Brown Eyes
+Medium Skin"
+horizontal_alignment = 1
+
+[node name="GenerationLabel" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.6, 0.7, 1)
+theme_override_font_sizes/font_size = 9
+text = "P"
+horizontal_alignment = 1
+
+[node name="ButtonRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="FavoriteButton" type="Button" parent="VBox/ButtonRow"]
+custom_minimum_size = Vector2(30, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "♡"
+flat = true
+
+[node name="DeleteButton" type="Button" parent="VBox/ButtonRow"]
+custom_minimum_size = Vector2(30, 24)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "🗑"
+flat = true

@@ -1,0 +1,314 @@
+[gd_scene load_steps=2 format=3 uid="uid://dteachermodepanel"]
+
+[ext_resource type="Script" path="res://scripts/ui/TeacherModePanel.gd" id="1_panel"]
+
+[node name="TeacherModePanel" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/HeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Teacher Mode Controls"
+theme_override_font_sizes/font_size = 18
+
+[node name="ActiveToggle" type="CheckButton" parent="MarginContainer/VBoxContainer/HeaderHBox"]
+layout_mode = 2
+text = "Active"
+
+[node name="CloseButton" type="Button" parent="MarginContainer/VBoxContainer/HeaderHBox"]
+layout_mode = 2
+text = "✕"
+tooltip_text = "Close Panel"
+
+[node name="TabContainer" type="TabContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Genes" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Genes"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="InfoLabel" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Genes/VBox"]
+layout_mode = 2
+text = "Select which genes are active for this session:"
+autowrap_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Genes/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GenesContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Genes/VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="LockToLevelCheck" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Genes/VBox"]
+layout_mode = 2
+text = "Lock gene set to current level"
+tooltip_text = "Prevents students from accessing genes not yet introduced"
+
+[node name="Breeding" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Breeding"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MaxGenesHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Breeding/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Breeding/VBox/MaxGenesHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Max genes per cross:"
+
+[node name="MaxGenesSpin" type="SpinBox" parent="MarginContainer/VBoxContainer/TabContainer/Breeding/VBox/MaxGenesHBox"]
+layout_mode = 2
+min_value = 1.0
+max_value = 8.0
+value = 2.0
+
+[node name="LockParentsCheck" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Breeding/VBox"]
+layout_mode = 2
+text = "Lock parents once selected"
+tooltip_text = "Prevents changing parents after initial selection"
+
+[node name="AllowSelfBreedingCheck" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Breeding/VBox"]
+layout_mode = 2
+text = "Allow self-recombination"
+tooltip_text = "Allow using the same human in both parent slots"
+
+[node name="BreedingModeHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Breeding/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Breeding/VBox/BreedingModeHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Offspring selection:"
+
+[node name="BreedingModeOption" type="OptionButton" parent="MarginContainer/VBoxContainer/TabContainer/Breeding/VBox/BreedingModeHBox"]
+layout_mode = 2
+
+[node name="InfoLabel" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Breeding/VBox"]
+layout_mode = 2
+text = "• Random: Random Punnett cell each time
+• Teacher-Selected: Teacher clicks which cell
+• Probability Preview: Shows ratios only, no offspring"
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+
+[node name="Visibility" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Visibility"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TraitVisibilityHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Visibility/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Visibility/VBox/TraitVisibilityHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Show traits as:"
+
+[node name="TraitVisibilityOption" type="OptionButton" parent="MarginContainer/VBoxContainer/TabContainer/Visibility/VBox/TraitVisibilityHBox"]
+layout_mode = 2
+
+[node name="PunnettModeHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Visibility/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Visibility/VBox/PunnettModeHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Punnett square display:"
+
+[node name="PunnettModeOption" type="OptionButton" parent="MarginContainer/VBoxContainer/TabContainer/Visibility/VBox/PunnettModeHBox"]
+layout_mode = 2
+
+[node name="HideAllelesCheck" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Visibility/VBox"]
+layout_mode = 2
+text = "Hide individual alleles"
+tooltip_text = "Shows phenotype only, hides Aa/BB notation"
+
+[node name="HideDominanceCheck" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Visibility/VBox"]
+layout_mode = 2
+text = "Hide dominance labels"
+tooltip_text = "Hides dominant/recessive terminology"
+
+[node name="LowSpecCheck" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Visibility/VBox"]
+layout_mode = 2
+text = "Low-spec mode (disable face previews in Punnett)"
+tooltip_text = "Improves performance on Chromebooks"
+
+[node name="Randomness" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Randomness"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="DeterministicCheck" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Randomness/VBox"]
+layout_mode = 2
+text = "Use seeded randomness (reproducible results)"
+tooltip_text = "Same seed produces identical offspring each time"
+
+[node name="SeedHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Randomness/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Randomness/VBox/SeedHBox"]
+layout_mode = 2
+text = "Random seed:"
+
+[node name="SeedSpin" type="SpinBox" parent="MarginContainer/VBoxContainer/TabContainer/Randomness/VBox/SeedHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+max_value = 999999.0
+value = 42.0
+
+[node name="NewSeedButton" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Randomness/VBox/SeedHBox"]
+layout_mode = 2
+disabled = true
+text = "New Seed"
+
+[node name="DisableGenerationCheck" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Randomness/VBox"]
+layout_mode = 2
+text = "Disable 'Generate Random Human' button"
+tooltip_text = "Prevents students from creating random humans"
+
+[node name="InfoLabel" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Randomness/VBox"]
+layout_mode = 2
+text = "Seeded randomness ensures identical demonstrations across class periods."
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+
+[node name="Ethics" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Ethics"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="NeutralLanguageCheck" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Ethics/VBox"]
+layout_mode = 2
+button_pressed = true
+text = "Enforce neutral language"
+tooltip_text = "Replaces 'better/worse' with 'more/less likely'"
+
+[node name="ShowDisclaimerCheck" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Ethics/VBox"]
+layout_mode = 2
+button_pressed = true
+text = "Show modeling disclaimer"
+tooltip_text = "Displays 'simplified model' notice in footer"
+
+[node name="NamingModeHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Ethics/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Ethics/VBox/NamingModeHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Auto-generated names:"
+
+[node name="NamingModeOption" type="OptionButton" parent="MarginContainer/VBoxContainer/TabContainer/Ethics/VBox/NamingModeHBox"]
+layout_mode = 2
+
+[node name="CustomPrefixHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Ethics/VBox"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Ethics/VBox/CustomPrefixHBox"]
+layout_mode = 2
+text = "Custom prefix:"
+
+[node name="CustomPrefixInput" type="LineEdit" parent="MarginContainer/VBoxContainer/TabContainer/Ethics/VBox/CustomPrefixHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "e.g., Subject"
+
+[node name="InfoLabel" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Ethics/VBox"]
+layout_mode = 2
+text = "These controls help prevent value judgments about human traits and maintain appropriate framing for genetics education."
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+
+[node name="FooterHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ApplyButton" type="Button" parent="MarginContainer/VBoxContainer/FooterHBox"]
+layout_mode = 2
+text = "Apply & Close"
+
+[node name="ResetDefaultsButton" type="Button" parent="MarginContainer/VBoxContainer/FooterHBox"]
+layout_mode = 2
+text = "Reset to Defaults"
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/FooterHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SessionResetButton" type="Button" parent="MarginContainer/VBoxContainer/FooterHBox"]
+layout_mode = 2
+text = "Session Reset"
+tooltip_text = "Clear library and parent slots for new class period"
+
+[node name="ExportButton" type="Button" parent="MarginContainer/VBoxContainer/FooterHBox"]
+layout_mode = 2
+text = "Export Snapshot"
+tooltip_text = "Export current session data as JSON"
