@@ -11,6 +11,7 @@ extends PanelContainer
 
 signal human_selected_for_parent(human_id: int, slot: String)
 signal human_card_clicked(human_id: int)
+signal face_clicked(human_id: int)
 
 # ============================================================================
 # NODE REFERENCES
@@ -100,6 +101,7 @@ func _add_card(human_data: Dictionary) -> void:
 	card_container.add_child(card)
 	card.setup(human_data)
 	card.clicked.connect(_on_card_clicked)
+	card.face_clicked.connect(_on_card_face_clicked)
 	card.drag_started.connect(_on_card_drag_started)
 	card.delete_requested.connect(_on_card_delete_requested)
 	card.favorite_toggled.connect(_on_card_favorite_toggled)
@@ -198,6 +200,10 @@ func _on_generate_pressed() -> void:
 
 func _on_card_clicked(human_id: int) -> void:
 	human_card_clicked.emit(human_id)
+
+
+func _on_card_face_clicked(human_id: int) -> void:
+	face_clicked.emit(human_id)
 
 
 func _on_card_drag_started(human_id: int) -> void:

@@ -25,6 +25,10 @@ signal teacher_mode_requested()
 @onready var teacher_mode_status: Label = $MainVBox/TopBar/VBox/TeacherModeBanner/StatusLabel
 @onready var footer_disclaimer: Label = $MainVBox/FooterDisclaimer
 @onready var teacher_mode_panel: Control = $TeacherModePanel
+@onready var face_preview_popup: PopupPanel = $FacePreviewPopup
+#@onready var face_preview_name: Label = $FacePreviewPopup/PanelContainer/VBoxContainer/NameLabel
+@onready var face_preview_face: Control = $FacePreviewPopup/PanelContainer/VBoxContainer/FacePreviewContainer/FacePreview
+@onready var face_preview_close: Button = $FacePreviewPopup/PanelContainer/VBoxContainer/CloseButton
 
 # ============================================================================
 # STATE
@@ -65,11 +69,15 @@ func _setup_connections() -> void:
 	# Library signals
 	if library_panel:
 		library_panel.human_selected_for_parent.connect(_on_human_selected_for_parent)
+		library_panel.face_clicked.connect(_on_library_face_clicked)
 	
 	# Teacher mode panel
 	if teacher_mode_panel:
 		teacher_mode_panel.panel_closed.connect(_on_teacher_panel_close_requested)
 		teacher_mode_panel.visible = false
+	
+	if face_preview_close:
+		face_preview_close.pressed.connect(_on_face_preview_close)
 
 
 func _populate_level_dropdown() -> void:
@@ -186,6 +194,30 @@ func _on_offspring_created(human_id: int) -> void:
 func _on_human_selected_for_parent(human_id: int, slot: String) -> void:
 	if breeding_area:
 		breeding_area.set_parent_from_library(human_id, slot)
+
+
+func _on_library_face_clicked(human_id: int) -> void:
+	var human := HumanGeneticsState.get_human(human_id)
+	if human.is_empty():
+		return
+	
+	var genotype := HumanGeneticsState.normalize_genotype(human.get("genotype", {}))
+	var phenotype := HumanGeneticsState.calculate_phenotype(genotype)
+	
+#	if face_preview_name:
+#		face_preview_name.text = human.get("name", "Human")
+	if face_preview_face and face_preview_face.has_method("render"):
+		face_preview_face.render(phenotype)
+		face_preview_face.scale = Vector2(3, 3)
+		face_preview_face.pivot_offset = face_preview_face.size / 2.0
+	
+	if face_preview_popup:
+		face_preview_popup.popup_centered(Vector2(360, 420))
+
+
+func _on_face_preview_close() -> void:
+	if face_preview_popup:
+		face_preview_popup.hide()
 
 
 # ============================================================================

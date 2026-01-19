@@ -16,7 +16,7 @@ border_width_bottom = 2
 border_color = Color(0.35, 0.38, 0.42, 1)
 
 [node name="ParentSlot" type="PanelContainer"]
-custom_minimum_size = Vector2(180, 450)
+custom_minimum_size = Vector2(150, 450)
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
 script = ExtResource("1_parentslot")
 
@@ -53,7 +53,7 @@ text = "Parent"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBox"]
-custom_minimum_size = Vector2(0, 190)
+custom_minimum_size = Vector2(100, 190)
 layout_mode = 2
 
 [node name="GenotypeContainer" type="VBoxContainer" parent="VBox/ScrollContainer"]

@@ -3,3 +3,11 @@ res://assets/themes/future_tech.theme.tres
 res://assets/fonts/default_font.tres
 res://scripts/humans/HumanFace.gd
 res://scripts/autoload/HumanGeneticsState.gd
+res://scenes/ui/RecombinationArea.tscn
+res://scripts/humans/HumanCard.gd
+res://scripts/main/GeneticsLab.gd
+res://scripts/ui/LibraryPanel.gd
+res://scenes/main/GeneticsLab.tscn
+res://scenes/ui/OffspringPreview.tscn
+res://scenes/ui/ParentSlot.tscn
+res://scenes/humans/HumanCard.tscn

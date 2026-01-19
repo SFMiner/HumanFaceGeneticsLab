@@ -26,7 +26,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="BaseLayer" type="ColorRect" parent="Layers"]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -94,17 +93,17 @@ grow_vertical = 2
 color = Color(0.12, 0.09, 0.06, 1)
 
 [node name="Neck" type="Sprite2D" parent="Layers"]
-position = Vector2(43.999996, 54)
+position = Vector2(49.5, 54)
 scale = Vector2(0.4513889, 0.45138893)
 texture = ExtResource("2_hj1kt")
 
 [node name="Hair" type="Sprite2D" parent="Layers"]
 visible = false
-position = Vector2(47, 32)
+position = Vector2(50, 32)
 texture = ExtResource("6_suoqq")
 
 [node name="EyeL" type="Sprite2D" parent="Layers"]
-position = Vector2(31, 53)
+position = Vector2(36.500004, 53)
 scale = Vector2(0.47058824, 0.47058824)
 texture = ExtResource("4_a08f1")
 
@@ -113,37 +112,52 @@ position = Vector2(57.375, 0)
 texture = ExtResource("5_0sxwu")
 
 [node name="IrisL" type="Sprite2D" parent="Layers"]
-position = Vector2(58.499996, 53.288467)
+position = Vector2(64, 53.288467)
 scale = Vector2(0.50000024, 0.5000001)
 texture = ExtResource("6_maenn")
 
 [node name="IrisR" type="Sprite2D" parent="Layers"]
-position = Vector2(31, 53.288467)
+position = Vector2(36.500004, 53.288467)
 scale = Vector2(0.50000024, 0.5000001)
 texture = ExtResource("6_maenn")
 flip_h = true
 
 [node name="PupilL" type="Sprite2D" parent="Layers"]
-position = Vector2(31.25, 53.076923)
+position = Vector2(36.750004, 53.076923)
 scale = Vector2(0.5769231, 0.5769231)
 texture = ExtResource("7_ls08l")
 
 [node name="PupilL2" type="Sprite2D" parent="Layers"]
-position = Vector2(58, 53)
+position = Vector2(63.500004, 53)
 scale = Vector2(0.5769231, 0.5769231)
 texture = ExtResource("7_ls08l")
 flip_h = true
 
 [node name="LashR" type="Sprite2D" parent="Layers"]
-position = Vector2(59.625004, 52.310898)
+position = Vector2(65.12501, 52.310898)
 scale = Vector2(0.48076922, 0.48076922)
 texture = ExtResource("17_vgur0")
 flip_h = true
 
 [node name="LashL" type="Sprite2D" parent="Layers"]
-position = Vector2(29.625002, 52.3109)
+position = Vector2(35.125008, 52.3109)
 scale = Vector2(0.48076922, 0.48076922)
 texture = ExtResource("17_vgur0")
+
+[node name="Eyeglare" type="Sprite2D" parent="Layers"]
+position = Vector2(34.500004, 49)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("9_tw0r3")
+
+[node name="Eyeglare2" type="Sprite2D" parent="Layers"]
+position = Vector2(62.500004, 49)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("9_tw0r3")
+
+[node name="Mouth" type="Sprite2D" parent="Layers"]
+position = Vector2(49.500004, 74)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("10_kgohr")
 
 [node name="FreckleLayer" type="ColorRect" parent="Layers"]
 visible = false
@@ -156,18 +170,3 @@ anchor_bottom = 0.55
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.65, 0.45, 0.3, 0.5)
-
-[node name="Eyeglare" type="Sprite2D" parent="."]
-position = Vector2(29, 49)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("9_tw0r3")
-
-[node name="Eyeglare2" type="Sprite2D" parent="."]
-position = Vector2(57, 49)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("9_tw0r3")
-
-[node name="Mouth" type="Sprite2D" parent="."]
-position = Vector2(44, 74)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("10_kgohr")

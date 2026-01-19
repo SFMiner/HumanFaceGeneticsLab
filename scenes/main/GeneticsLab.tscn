@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://xv118j8brm34"]
+[gd_scene load_steps=11 format=3 uid="uid://xv118j8brm34"]
 
 [ext_resource type="Script" uid="uid://bfb4hwj02xmp0" path="res://scripts/main/GeneticsLab.gd" id="1_main"]
 [ext_resource type="Theme" uid="uid://djfpgda2gfca1" path="res://assets/themes/future_tech.theme.tres" id="1_wk2ji"]
@@ -7,6 +7,7 @@
 [ext_resource type="FontFile" uid="uid://bsfuht6qufe6c" path="res://assets/fonts/header_font.ttf" id="3_6hym4"]
 [ext_resource type="PackedScene" uid="uid://bv3jcvn3xh1cf" path="res://scenes/ui/RecombinationArea.tscn" id="3_breeding"]
 [ext_resource type="PackedScene" uid="uid://cvr0adchx0ul0" path="res://scenes/ui/TeacherModePanel.tscn" id="4_teacher"]
+[ext_resource type="PackedScene" uid="uid://cfuu18w8a65w4" path="res://scenes/humans/HumanFace.tscn" id="5_face"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
 content_margin_left = 10.0
@@ -123,6 +124,41 @@ visible = false
 layout_mode = 1
 offset_left = -450.0
 offset_right = 450.0
+
+[node name="FacePreviewPopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
+size = Vector2i(396, 690)
+visible = true
+content_scale_factor = 3.0
+
+[node name="PanelContainer" type="PanelContainer" parent="FacePreviewPopup"]
+custom_minimum_size = Vector2(100, 120)
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 128.0
+offset_bottom = 226.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FacePreviewPopup/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="FacePreviewContainer" type="CenterContainer" parent="FacePreviewPopup/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(80, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="FacePreview" parent="FacePreviewPopup/PanelContainer/VBoxContainer/FacePreviewContainer" instance=ExtResource("5_face")]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="FacePreviewPopup/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 10
+text = "Close"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false

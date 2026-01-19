@@ -147,7 +147,7 @@ const EYE_COLOR_PALETTE: Dictionary = {
 	"hazel": Color("#73682A"),
 	"dark_green": Color("#2E5C1E"),
 	"light_green": Color("#6B8E23"),
-	"dark_blue": Color("#1A3B5C"),
+	"dark_blue": Color("0057afff"),
 	"light_blue": Color("#5B9BD5")
 }
 

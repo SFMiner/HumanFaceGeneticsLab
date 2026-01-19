@@ -10,6 +10,7 @@ extends PanelContainer
 # ============================================================================
 
 signal clicked(human_id: int)
+signal face_clicked(human_id: int)
 signal drag_started(human_id: int)
 signal delete_requested(human_id: int)
 signal favorite_toggled(human_id: int)
@@ -150,6 +151,9 @@ func flash() -> void:
 func _on_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			if face_container and face_container.get_global_rect().has_point(event.global_position):
+				face_clicked.emit(_human_id)
+				return
 			clicked.emit(_human_id)
 
 
