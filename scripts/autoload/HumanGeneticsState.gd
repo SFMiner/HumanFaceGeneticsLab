@@ -611,10 +611,6 @@ func _generate_random_allele_pair(gene_id: String) -> Array:
 	var gene_data: Dictionary = GENE_LIBRARY.get(gene_id, {})
 	var dom: String = gene_data.get("dom", "A")
 	var rec: String = gene_data.get("rec", "a")
-	# Avoid generating aa when the level disables albinism.
-	
-	if gene_id == "TYR" and not is_albinism_allowed():
-		return [dom, rec] if rng.randf() < 0.5 else [dom, dom]
 	
 	# Special handling for skin genes at level 3+ (weighted distribution)
 	if gene_id in ["SLC24A5", "SLC45A2"] and current_level_id >= 3:
@@ -657,21 +653,12 @@ func _get_albinism_pair_for_level(genotype: Dictionary, active_genes: Array) -> 
 ## Get TYR pair with optional albinism constraints
 func _get_tyrosinase_pair_for_level(genotype: Dictionary, active_genes: Array) -> Array:
 	var tyr: Array = _get_gene_pair_for_level(genotype, "TYR", active_genes)
-	if is_albinism_allowed():
-		return tyr
-	if "A" in tyr:
-		return tyr
-	# Prevent TYR aa when albinism is disabled.
-	return ["A", "a"]
+	return tyr
 
 
 ## Sanitize a genotype to respect current level constraints
 func sanitize_genotype_for_level(genotype: Dictionary) -> Dictionary:
 	var result := genotype.duplicate(true)
-	if not is_albinism_allowed():
-		if result.has("TYR") and not "A" in result["TYR"]:
-			# Force TYR to a non-albinism genotype.
-			result["TYR"] = ["A", "a"]
 	return result
 
 
@@ -928,11 +915,6 @@ func get_allele_pairs(gene_id: String) -> Array:
 	var gene_data: Dictionary = GENE_LIBRARY.get(gene_id, {})
 	var dom: String = gene_data.get("dom", "A")
 	var rec: String = gene_data.get("rec", "a")
-	if gene_id == "TYR" and not is_albinism_allowed():
-		return [
-			[dom, dom],
-			[dom, rec]
-		]
 	return [
 		[dom, dom],
 		[dom, rec],

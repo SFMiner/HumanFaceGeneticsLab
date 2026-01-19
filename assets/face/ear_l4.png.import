@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjejuxsavv11m"
-path="res://.godot/imported/pupil_l.png-45c43c68af66d0c983942782d2fe3730.ctex"
+uid="uid://bp3xefm5lxb3c"
+path="res://.godot/imported/ear_l4.png-5658fa21a7d0ea97218409bcc007c69c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/face/pupil_l.png"
-dest_files=["res://.godot/imported/pupil_l.png-45c43c68af66d0c983942782d2fe3730.ctex"]
+source_file="res://assets/face/ear_l4.png"
+dest_files=["res://.godot/imported/ear_l4.png-5658fa21a7d0ea97218409bcc007c69c.ctex"]
 
 [params]
 

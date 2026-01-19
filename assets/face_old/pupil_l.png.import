@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://u0aptc7dletj"
-path="res://.godot/imported/lip_l.png-32a694bdf27f5c04a2752858b82697c7.ctex"
+uid="uid://cjejuxsavv11m"
+path="res://.godot/imported/pupil_l.png-9084c73870e865f175c96f24a177491e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/face/lip_l.png"
-dest_files=["res://.godot/imported/lip_l.png-32a694bdf27f5c04a2752858b82697c7.ctex"]
+source_file="res://assets/face_old/pupil_l.png"
+dest_files=["res://.godot/imported/pupil_l.png-9084c73870e865f175c96f24a177491e.ctex"]
 
 [params]
 

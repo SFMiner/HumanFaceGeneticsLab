@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0h5iy8k34ln7"
-path="res://.godot/imported/hair1.png-34a2da5bf8ab64538937a610d0874836.ctex"
+uid="uid://u0aptc7dletj"
+path="res://.godot/imported/lip_l.png-f4d9dcbf37cc781f5a1d47e329778ec9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/face/hair1.png"
-dest_files=["res://.godot/imported/hair1.png-34a2da5bf8ab64538937a610d0874836.ctex"]
+source_file="res://assets/face_old/lip_l.png"
+dest_files=["res://.godot/imported/lip_l.png-f4d9dcbf37cc781f5a1d47e329778ec9.ctex"]
 
 [params]
 

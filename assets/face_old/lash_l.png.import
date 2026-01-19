@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dm48l1fqvrdj4"
-path="res://.godot/imported/neck.png-e39b7eeb73d64b2db10c586546ce33c3.ctex"
+uid="uid://dh7qut7m4kuup"
+path="res://.godot/imported/lash_l.png-e4807bd83270b943cb76cd3cdf74c10d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/face/neck.png"
-dest_files=["res://.godot/imported/neck.png-e39b7eeb73d64b2db10c586546ce33c3.ctex"]
+source_file="res://assets/face_old/lash_l.png"
+dest_files=["res://.godot/imported/lash_l.png-e4807bd83270b943cb76cd3cdf74c10d.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cmv3ohwq046uu"
-path="res://.godot/imported/iris_l.png-5e64a9c0ff08c5df3655b1e873a77f15.ctex"
+uid="uid://pjwl33nllp46"
+path="res://.godot/imported/eyebrow_l.png-d5a3ca92fee565f22d01f1110dd3b0bf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/face/iris_l.png"
-dest_files=["res://.godot/imported/iris_l.png-5e64a9c0ff08c5df3655b1e873a77f15.ctex"]
+source_file="res://assets/face_old/eyebrow_l.png"
+dest_files=["res://.godot/imported/eyebrow_l.png-d5a3ca92fee565f22d01f1110dd3b0bf.ctex"]
 
 [params]
 
