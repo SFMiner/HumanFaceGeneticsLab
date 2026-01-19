@@ -150,14 +150,16 @@ func _get_empty_message() -> String:
 
 ## Scroll to show a specific human
 func scroll_to_human(human_id: int) -> void:
-	# Find the card with this ID and scroll to it
+	# Wait for layout/refresh to settle, then find the card with this ID
+	await get_tree().process_frame
+	if not is_inside_tree():
+		return
+	
+	var scroll_container := $VBox/ScrollContainer as ScrollContainer
 	for card in card_container.get_children():
 		if card.has_method("get_human_id") and card.get_human_id() == human_id:
-			# Ensure card is visible
-			await get_tree().process_frame
-			var scroll_container := $VBox/ScrollContainer as ScrollContainer
+			# Avoid stale references by resolving after the refresh frame.
 			scroll_container.ensure_control_visible(card)
-			# Flash the card
 			if card.has_method("flash"):
 				card.flash()
 			break

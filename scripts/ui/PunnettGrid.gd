@@ -218,8 +218,25 @@ func _format_genotype_short(genotype: Dictionary) -> String:
 		if genotype.has(gene):
 			var alleles: Array = genotype[gene]
 			if alleles.size() >= 2:
-				parts.append(alleles[0] + alleles[1])
+				parts.append(_format_allele_pair(alleles, gene))
 	return " ".join(parts)
+
+
+func _format_allele_pair(alleles: Array, gene_id: String) -> String:
+	if alleles.size() < 2:
+		return "??"
+	
+	var gene_info: Dictionary = HumanGeneticsState.get_gene_info(gene_id)
+	if gene_info.is_empty():
+		return str(alleles[0]) + str(alleles[1])
+	
+	var dom: String = gene_info.get("dom", "")
+	var rec: String = gene_info.get("rec", "")
+	
+	if dom != "" and rec != "" and dom in alleles and rec in alleles:
+		return dom + rec
+	
+	return str(alleles[0]) + str(alleles[1])
 
 
 func _combine_gametes(gamete_a: Dictionary, gamete_b: Dictionary) -> Dictionary:

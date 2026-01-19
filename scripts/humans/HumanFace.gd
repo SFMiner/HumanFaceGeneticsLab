@@ -10,11 +10,11 @@ extends Control
 # ============================================================================
 
 @onready var base_layer: ColorRect = $Layers/BaseLayer
-@onready var skin_layer: ColorRect = $Layers/SkinLayer
-@onready var eye_whites: ColorRect = $Layers/EyeWhites
-@onready var iris_left: ColorRect = $Layers/IrisLeft
-@onready var iris_right: ColorRect = $Layers/IrisRight
-@onready var hair_layer: ColorRect = $Layers/HairLayer
+@onready var skin_layer: Sprite2D = $Layers/Neck 
+@onready var eye_whites: Sprite2D = $Layers/EyeL
+@onready var iris_left: Sprite2D = $Layers/IrisL
+@onready var iris_right: Sprite2D = $Layers/IrisR
+@onready var hair_layer: Sprite2D = $Layers/Hair
 @onready var freckle_layer: ColorRect = $Layers/FreckleLayer
 
 # ============================================================================
@@ -35,17 +35,17 @@ func _ready() -> void:
 func _setup_default_appearance() -> void:
 	# Set default placeholder colors
 	if base_layer:
-		base_layer.color = Color(0.3, 0.3, 0.35)  # Dark background
+		base_layer.modulate = Color(0.3, 0.3, 0.35)  # Dark background
 	if skin_layer:
-		skin_layer.color = Color(0.9, 0.8, 0.7)  # Default skin
+		skin_layer.modulate = Color(0.9, 0.8, 0.7)  # Default skin
 	if eye_whites:
-		eye_whites.color = Color.WHITE
+		eye_whites.modulate = Color.WHITE
 	if iris_left:
-		iris_left.color = Color(0.4, 0.3, 0.2)  # Default brown
+		iris_left.modulate = Color(0.4, 0.3, 0.2)  # Default brown
 	if iris_right:
-		iris_right.color = Color(0.4, 0.3, 0.2)
+		iris_right.modulate = Color(0.4, 0.3, 0.2)
 	if hair_layer:
-		hair_layer.color = Color(0.2, 0.15, 0.1)  # Default dark hair
+		hair_layer.modulate = Color(0.2, 0.15, 0.1)  # Default dark hair
 	if freckle_layer:
 		freckle_layer.visible = false
 
@@ -86,22 +86,22 @@ func _apply_eye_color(eye_color: String) -> void:
 	var color := HumanGeneticsState.get_eye_color(eye_color)
 	
 	if iris_left:
-		iris_left.color = color
+		iris_left.modulate = color
 	if iris_right:
-		iris_right.color = color
+		iris_right.modulate = color
 	
 	# Special handling for albino - pinkish eye whites
 	if eye_color == "albino_pink" and eye_whites:
-		eye_whites.color = Color(1.0, 0.94, 0.94)  # Slight pink tint
+		eye_whites.modulate = Color(1.0, 0.94, 0.94)  # Slight pink tint
 	elif eye_whites:
-		eye_whites.color = Color.WHITE
+		eye_whites.modulate = Color.WHITE
 
 
 func _apply_skin_tone(skin_tone: String) -> void:
 	var color := HumanGeneticsState.get_skin_color(skin_tone)
 	
 	if skin_layer:
-		skin_layer.color = color
+		skin_layer.modulate = color
 	
 	# Handle freckles
 	var has_freckles := HumanGeneticsState.has_freckles(skin_tone)
@@ -116,7 +116,7 @@ func _apply_hair_color(hair_color: String) -> void:
 	var color := HumanGeneticsState.get_hair_color(hair_color)
 	
 	if hair_layer:
-		hair_layer.color = color
+		hair_layer.modulate = color
 
 
 func _apply_hair_texture(hair_texture: String) -> void:

@@ -34,6 +34,15 @@ const GENE_LIBRARY: Dictionary = {
 		"epistatic_condition": "aa",
 		"epistatic_result": {"eye_color": "albino_pink", "skin_tone": "albino_pale", "hair_color": "albino_white"}
 	},
+	"ALB": {
+		"name": "Albinism Locus",
+		"full_name": "Albinism Locus (Pigment Suppression)",
+		"dom": "N",
+		"rec": "n",
+		"description": "Controls albinism expression. Recessive nn triggers albinism effects with TYR-dependent severity.",
+		"affects": ["eye_color", "skin_tone", "hair_color"],
+		"epistatic": true
+	},
 	"OCA2": {
 		"name": "OCA2",
 		"full_name": "P-Protein (Brown Eye Gene)",
@@ -105,6 +114,7 @@ const GENE_LIBRARY: Dictionary = {
 ## from earlier levels into later levels (heterozygous for maximum variation)
 const CONVENIENCE_GENOTYPES: Dictionary = {
 	"TYR": ["A", "a"],
+	"ALB": ["N", "n"],
 	"OCA2": ["B", "b"],
 	"HERC2": ["G", "g"],
 	"TYRP1": ["H", "h"],
@@ -114,9 +124,23 @@ const CONVENIENCE_GENOTYPES: Dictionary = {
 	"TCHH": ["C", "c"]
 }
 
+## Neutral genotypes for inactive genes (minimize unintended trait influence)
+const NEUTRAL_GENOTYPES: Dictionary = {
+	"TYR": ["A", "A"],
+	"ALB": ["N", "N"],
+	"OCA2": ["b", "b"],
+	"HERC2": ["g", "g"],
+	"TYRP1": ["h", "h"],
+	"SLC24A5": ["d", "d"],
+	"SLC45A2": ["e", "e"],
+	"MC1R": ["r", "r"],
+	"TCHH": ["C", "C"]
+}
+
 ## Phenotype color palettes
 const EYE_COLOR_PALETTE: Dictionary = {
 	"albino_pink": Color("#FFB6C1"),
+	"pale_blue": Color("#B8D4F4"),
 	"dark_brown": Color("#3E2723"),
 	"medium_brown": Color("#634E34"),
 	"light_brown": Color("#8B6F47"),
@@ -129,6 +153,7 @@ const EYE_COLOR_PALETTE: Dictionary = {
 
 const SKIN_TONE_PALETTE: Dictionary = {
 	"albino_pale": Color("#FFF5F5"),
+	"albino_light": Color("#FFF0DD"),
 	"very_light": Color("#FFDFC4"),
 	"very_light_freckled": Color("#FFDFC4"),
 	"light": Color("#F0C8A0"),
@@ -140,6 +165,7 @@ const SKIN_TONE_PALETTE: Dictionary = {
 
 const HAIR_COLOR_PALETTE: Dictionary = {
 	"albino_white": Color("#FFFFFF"),
+	"platinum_blonde": Color("#F6EEDC"),
 	"bright_red": Color("#C1440E"),
 	"auburn": Color("#A0522D"),
 	"black": Color("#1C1C1C"),
@@ -250,6 +276,11 @@ func get_current_level() -> Dictionary:
 	return current_level_data
 
 
+## Check if albinism is allowed for the current level
+func is_albinism_allowed() -> bool:
+	return current_level_data.get("allow_albinism", true)
+
+
 # ============================================================================
 # PHENOTYPE CALCULATIONS
 # ============================================================================
@@ -267,16 +298,22 @@ func calculate_phenotype(genotype: Dictionary) -> Dictionary:
 ## Calculate eye color from genotype
 ## Implements epistasis (TYR) and polygenic inheritance (OCA2, HERC2, TYRP1, SLC24A5)
 func calculate_eye_color(genotype: Dictionary) -> String:
-	# EPISTASIS CHECK - albinism overrides all pigmentation
-	var tyr: Array = genotype.get("TYR", CONVENIENCE_GENOTYPES["TYR"])
-	if not "A" in tyr:  # aa = albinism
-		return "albino_pink"
+	var active_genes := get_active_genes()
+	var tyr: Array = _get_tyrosinase_pair_for_level(genotype, active_genes)
+	var alb: Array = _get_albinism_pair_for_level(genotype, active_genes)
+	if alb.count("n") == 2:
+		# Albinism severity is modulated by TYR dosage.
+		if not "A" in tyr:
+			return "albino_pink"
+		if tyr.count("A") == 1:
+			return "pale_blue"
+		return "dark_blue"
 	
 	# POLYGENIC CALCULATION
-	var oca2: Array = genotype.get("OCA2", CONVENIENCE_GENOTYPES["OCA2"])
-	var herc2: Array = genotype.get("HERC2", CONVENIENCE_GENOTYPES["HERC2"])
-	var tyrp1: Array = genotype.get("TYRP1", CONVENIENCE_GENOTYPES["TYRP1"])
-	var slc24a5: Array = genotype.get("SLC24A5", CONVENIENCE_GENOTYPES["SLC24A5"])
+	var oca2: Array = _get_gene_pair_for_level(genotype, "OCA2", active_genes)
+	var herc2: Array = _get_gene_pair_for_level(genotype, "HERC2", active_genes)
+	var tyrp1: Array = _get_gene_pair_for_level(genotype, "TYRP1", active_genes)
+	var slc24a5: Array = _get_gene_pair_for_level(genotype, "SLC24A5", active_genes)
 	
 	# Brown pathway (OCA2 dominant)
 	if "B" in oca2:
@@ -310,18 +347,24 @@ func calculate_eye_color(genotype: Dictionary) -> String:
 ## Calculate skin tone from genotype
 ## Implements additive model with freckle modifier
 func calculate_skin_tone(genotype: Dictionary) -> String:
-	# EPISTASIS CHECK
-	var tyr: Array = genotype.get("TYR", CONVENIENCE_GENOTYPES["TYR"])
-	if not "A" in tyr:
-		return "albino_pale"
+	var active_genes := get_active_genes()
+	var tyr: Array = _get_tyrosinase_pair_for_level(genotype, active_genes)
+	var alb: Array = _get_albinism_pair_for_level(genotype, active_genes)
+	if alb.count("n") == 2:
+		# TYR aa yields full albinism; TYR Aa gives partial depigmentation.
+		if not "A" in tyr:
+			return "albino_pale"
+		if tyr.count("A") == 1:
+			return "albino_light"
+		return "very_light"
 	
 	# POLYGENIC CALCULATION (additive model)
 	var darkness_score: int = 0
 	
-	var slc24a5: Array = genotype.get("SLC24A5", CONVENIENCE_GENOTYPES["SLC24A5"])
-	var slc45a2: Array = genotype.get("SLC45A2", CONVENIENCE_GENOTYPES["SLC45A2"])
-	var oca2: Array = genotype.get("OCA2", CONVENIENCE_GENOTYPES["OCA2"])
-	var mc1r: Array = genotype.get("MC1R", CONVENIENCE_GENOTYPES["MC1R"])
+	var slc24a5: Array = _get_gene_pair_for_level(genotype, "SLC24A5", active_genes)
+	var slc45a2: Array = _get_gene_pair_for_level(genotype, "SLC45A2", active_genes)
+	var oca2: Array = _get_gene_pair_for_level(genotype, "OCA2", active_genes)
+	var mc1r: Array = _get_gene_pair_for_level(genotype, "MC1R", active_genes)
 	
 	# Each dominant allele adds to darkness
 	darkness_score += slc24a5.count("D") * 2  # Major effect (0-4 points)
@@ -354,21 +397,50 @@ func calculate_skin_tone(genotype: Dictionary) -> String:
 ## Calculate hair color from genotype
 ## Implements MC1R epistasis for red hair
 func calculate_hair_color(genotype: Dictionary) -> String:
-	# EPISTASIS CHECK - albinism
-	var tyr: Array = genotype.get("TYR", CONVENIENCE_GENOTYPES["TYR"])
-	if not "A" in tyr:
-		return "albino_white"
+	var active_genes := get_active_genes()
+	var tyr: Array = _get_tyrosinase_pair_for_level(genotype, active_genes)
+	var alb: Array = _get_albinism_pair_for_level(genotype, active_genes)
+	if alb.count("n") == 2:
+		# Albinism lightens hair color with TYR-dependent severity.
+		if not "A" in tyr:
+			return "albino_white"
+		if tyr.count("A") == 1:
+			return "platinum_blonde"
+		var base_hair := _calculate_hair_color_base(genotype, active_genes)
+		if base_hair in ["blonde", "light_brown"]:
+			return base_hair
+		return "light_brown"
 	
+	return _calculate_hair_color_base(genotype, active_genes)
+
+
+## Calculate hair texture from genotype
+## Implements incomplete dominance (3 distinct phenotypes)
+func calculate_hair_texture(genotype: Dictionary) -> String:
+	var active_genes := get_active_genes()
+	var tchh: Array = _get_gene_pair_for_level(genotype, "TCHH", active_genes)
+	
+	# Incomplete dominance - 3 distinct phenotypes
+	if tchh.count("C") == 2:
+		return "straight"
+	elif "C" in tchh and "c" in tchh:
+		return "wavy"
+	else:
+		return "curly"
+
+
+## Base hair color calculation without albinism effects
+func _calculate_hair_color_base(genotype: Dictionary, active_genes: Array) -> String:
 	# MC1R EPISTASIS (red hair pathway) - incomplete dominance
-	var mc1r: Array = genotype.get("MC1R", CONVENIENCE_GENOTYPES["MC1R"])
+	var mc1r: Array = _get_gene_pair_for_level(genotype, "MC1R", active_genes)
 	if mc1r.count("R") == 2:
 		return "bright_red"  # Homozygous RR
 	elif "R" in mc1r:
 		return "auburn"  # Heterozygous Rr
 	
 	# EUMELANIN PATHWAY (TYRP1 + OCA2)
-	var tyrp1: Array = genotype.get("TYRP1", CONVENIENCE_GENOTYPES["TYRP1"])
-	var oca2: Array = genotype.get("OCA2", CONVENIENCE_GENOTYPES["OCA2"])
+	var tyrp1: Array = _get_gene_pair_for_level(genotype, "TYRP1", active_genes)
+	var oca2: Array = _get_gene_pair_for_level(genotype, "OCA2", active_genes)
 	
 	var darkness_score: int = tyrp1.count("H") * 2 + oca2.count("B")
 	
@@ -382,20 +454,6 @@ func calculate_hair_color(genotype: Dictionary) -> String:
 		return "light_brown"
 	else:
 		return "blonde"
-
-
-## Calculate hair texture from genotype
-## Implements incomplete dominance (3 distinct phenotypes)
-func calculate_hair_texture(genotype: Dictionary) -> String:
-	var tchh: Array = genotype.get("TCHH", CONVENIENCE_GENOTYPES["TCHH"])
-	
-	# Incomplete dominance - 3 distinct phenotypes
-	if tchh.count("C") == 2:
-		return "straight"
-	elif "C" in tchh and "c" in tchh:
-		return "wavy"
-	else:
-		return "curly"
 
 
 # ============================================================================
@@ -553,6 +611,10 @@ func _generate_random_allele_pair(gene_id: String) -> Array:
 	var gene_data: Dictionary = GENE_LIBRARY.get(gene_id, {})
 	var dom: String = gene_data.get("dom", "A")
 	var rec: String = gene_data.get("rec", "a")
+	# Avoid generating aa when the level disables albinism.
+	
+	if gene_id == "TYR" and not is_albinism_allowed():
+		return [dom, rec] if rng.randf() < 0.5 else [dom, dom]
 	
 	# Special handling for skin genes at level 3+ (weighted distribution)
 	if gene_id in ["SLC24A5", "SLC45A2"] and current_level_id >= 3:
@@ -574,6 +636,43 @@ func _generate_random_allele_pair(gene_id: String) -> Array:
 func generate_random_human() -> int:
 	var genotype := generate_random_genotype()
 	return add_human(genotype, "", 0)
+
+
+## Get a gene pair that respects current level activity
+func _get_gene_pair_for_level(genotype: Dictionary, gene_id: String, active_genes: Array) -> Array:
+	if gene_id in active_genes:
+		return genotype.get(gene_id, CONVENIENCE_GENOTYPES.get(gene_id, ["A", "a"]))
+	# Inactive genes default to neutralized alleles to avoid unintended effects.
+	return NEUTRAL_GENOTYPES.get(gene_id, CONVENIENCE_GENOTYPES.get(gene_id, ["A", "a"]))
+
+
+## Get ALB pair with optional albinism constraints
+func _get_albinism_pair_for_level(genotype: Dictionary, active_genes: Array) -> Array:
+	if not is_albinism_allowed():
+		# Clamp ALB to NN when albinism is disabled for the level.
+		return ["N", "N"]
+	return _get_gene_pair_for_level(genotype, "ALB", active_genes)
+
+
+## Get TYR pair with optional albinism constraints
+func _get_tyrosinase_pair_for_level(genotype: Dictionary, active_genes: Array) -> Array:
+	var tyr: Array = _get_gene_pair_for_level(genotype, "TYR", active_genes)
+	if is_albinism_allowed():
+		return tyr
+	if "A" in tyr:
+		return tyr
+	# Prevent TYR aa when albinism is disabled.
+	return ["A", "a"]
+
+
+## Sanitize a genotype to respect current level constraints
+func sanitize_genotype_for_level(genotype: Dictionary) -> Dictionary:
+	var result := genotype.duplicate(true)
+	if not is_albinism_allowed():
+		if result.has("TYR") and not "A" in result["TYR"]:
+			# Force TYR to a non-albinism genotype.
+			result["TYR"] = ["A", "a"]
+	return result
 
 
 # ============================================================================
@@ -615,6 +714,8 @@ func breed(parent_a_id: int, parent_b_id: int, selected_cell: int = -1) -> int:
 		cell_index = rng.randi_range(0, punnett.size() - 1)
 	
 	var offspring_genotype: Dictionary = punnett[cell_index]
+	offspring_genotype = sanitize_genotype_for_level(offspring_genotype)
+	offspring_genotype = sanitize_genotype_for_level(offspring_genotype)
 	
 	# Determine generation
 	var parent_a_gen: int = parent_a.get("generation", 0)
@@ -827,6 +928,11 @@ func get_allele_pairs(gene_id: String) -> Array:
 	var gene_data: Dictionary = GENE_LIBRARY.get(gene_id, {})
 	var dom: String = gene_data.get("dom", "A")
 	var rec: String = gene_data.get("rec", "a")
+	if gene_id == "TYR" and not is_albinism_allowed():
+		return [
+			[dom, dom],
+			[dom, rec]
+		]
 	return [
 		[dom, dom],
 		[dom, rec],

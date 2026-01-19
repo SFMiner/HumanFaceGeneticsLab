@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cpungrid001scn"]
+[gd_scene load_steps=3 format=3 uid="uid://co26eb2p5sffl"]
 
-[ext_resource type="Script" path="res://scripts/ui/PunnettGrid.gd" id="1_grid"]
+[ext_resource type="Script" uid="uid://ctlsejw3co2n5" path="res://scripts/ui/PunnettGrid.gd" id="1_grid"]
+[ext_resource type="FontFile" uid="uid://bsfuht6qufe6c" path="res://assets/fonts/header_font.ttf" id="2_pwb07"]
 
 [node name="PunnettGrid" type="PanelContainer"]
 custom_minimum_size = Vector2(400, 300)
@@ -17,6 +18,7 @@ layout_mode = 2
 [node name="Title" type="Label" parent="VBox/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("2_pwb07")
 text = "Punnett Square"
 horizontal_alignment = 1
 

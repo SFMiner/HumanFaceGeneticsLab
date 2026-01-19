@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bfb4hwj02xmp0" path="res://scripts/main/GeneticsLab.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://clibpan001scn" path="res://scenes/ui/LibraryPanel.tscn" id="2_library"]
-[ext_resource type="PackedScene" uid="uid://bv3jcvn3xh1cf" path="res://scenes/ui/BreedingArea.tscn" id="3_breeding"]
+[ext_resource type="PackedScene" uid="uid://bv3jcvn3xh1cf" path="res://scenes/ui/RecombinationArea.tscn" id="3_breeding"]
 [ext_resource type="PackedScene" uid="uid://cvr0adchx0ul0" path="res://scenes/ui/TeacherModePanel.tscn" id="4_teacher"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
@@ -105,7 +105,7 @@ size_flags_vertical = 3
 [node name="LibraryPanel" parent="MainVBox/MainHBox" instance=ExtResource("2_library")]
 layout_mode = 2
 
-[node name="BreedingArea" parent="MainVBox/MainHBox" instance=ExtResource("3_breeding")]
+[node name="RecombinationArea" parent="MainVBox/MainHBox" instance=ExtResource("3_breeding")]
 layout_mode = 2
 size_flags_horizontal = 3
 

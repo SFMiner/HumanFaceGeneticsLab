@@ -55,18 +55,13 @@ func _create_gene_section(gene_id: String, gene_info: Dictionary) -> VBoxContain
 	
 	var dom: String = gene_info.get("dom", "A")
 	var rec: String = gene_info.get("rec", "a")
-	
-	# Create three chips: homozygous dominant, heterozygous, homozygous recessive
-	var combinations := [
-		[dom, dom],  # AA
-		[dom, rec],  # Aa
-		[rec, rec]   # aa
-	]
+	# Use model-aware pairs (e.g., hide TYR aa when albinism is disabled).
+	var combinations := HumanGeneticsState.get_allele_pairs(gene_id)
 	
 	for alleles in combinations:
 		var chip: AlleleChip = AlleleChipScene.instantiate()
-		chip.setup(gene_id, alleles, true, false)  # Draggable, no remove button
 		chip_row.add_child(chip)
+		chip.setup(gene_id, alleles, true, false)  # Draggable, no remove button
 	
 	# Add separator
 	var separator := HSeparator.new()

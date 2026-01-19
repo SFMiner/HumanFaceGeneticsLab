@@ -1,11 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://p7kfl1s05v07"]
+[gd_scene load_steps=3 format=3 uid="uid://p7kfl1s05v07"]
 
 [ext_resource type="Script" uid="uid://ccegbvjpsi5h1" path="res://scripts/ui/OffspringPreview.gd" id="1_preview"]
+[ext_resource type="FontFile" uid="uid://bsfuht6qufe6c" path="res://assets/fonts/header_font.ttf" id="2_kdi8r"]
 
 [node name="OffspringPreview" type="PanelContainer"]
-custom_minimum_size = Vector2(280, 230)
-offset_right = 573.0
-offset_bottom = 228.0
+custom_minimum_size = Vector2(200, 200)
+offset_right = 512.0
+offset_bottom = 263.0
 script = ExtResource("1_preview")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -15,106 +16,151 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_kdi8r")
 text = "Offspring Result"
 horizontal_alignment = 1
 
-[node name="FaceContainer" type="CenterContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
-custom_minimum_size = Vector2(300, 0)
+[node name="UnsavedBadge" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 0.4, 1)
+theme_override_font_sizes/font_size = 10
+text = "Unsaved result"
+horizontal_alignment = 1
+
+[node name="FaceContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="FacePlaceholder" type="ColorRect" parent="MarginContainer/HBoxContainer/VBoxContainer2/FaceContainer"]
+[node name="FacePlaceholder" type="ColorRect" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/FaceContainer"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 color = Color(0.2, 0.2, 0.2, 1)
 
-[node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
+[node name="ProbabilityContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ProbTitle" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ProbabilityContainer"]
+layout_mode = 2
+text = "Expected Phenotype Ratios:"
+horizontal_alignment = 1
+
+[node name="ProbabilityList" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ProbabilityContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ButtonContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="SaveButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+[node name="SaveButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 0
 text = "Save to Library"
 
-[node name="NameInput" type="LineEdit" parent="MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+[node name="NameInput" type="LineEdit" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Enter name..."
 
-[node name="RandomNameButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+[node name="RandomNameButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 tooltip_text = "Random Name"
 text = "🎲"
 
-[node name="ConfirmButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+[node name="ConfirmButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 tooltip_text = "Confirm Save"
 text = "✓"
 
-[node name="CancelButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+[node name="CancelButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ButtonContainer"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 2
 tooltip_text = "Cancel"
 text = "✗"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
+size_flags_vertical = 3
 
-[node name="PhenotypeContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PhenotypeContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 4
 
-[node name="EyeLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer"]
+[node name="EyeLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/PhenotypeContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Eyes: --"
 
-[node name="SkinLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer"]
+[node name="SkinLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/PhenotypeContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Skin: --"
 
-[node name="HairColorLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer"]
+[node name="HairColorLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/PhenotypeContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Hair: --"
 
-[node name="HairTextureLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer"]
+[node name="HairTextureLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/PhenotypeContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Texture: --"
 
-[node name="GenotypeContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+[node name="GenotypeContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 2
 
-[node name="GenotypeTitle" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/GenotypeContainer"]
+[node name="GenotypeTitle" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/GenotypeContainer"]
 layout_mode = 2
 text = "Genotype:"
 
-[node name="GenotypeLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/GenotypeContainer"]
+[node name="GenotypeLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/ScrollContainer/VBoxContainer/GenotypeContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "--"
 autowrap_mode = 2
-
-[node name="ProbabilityContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="ProbTitle" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer/ProbabilityContainer"]
-layout_mode = 2
-text = "Expected Phenotype Ratios:"
-horizontal_alignment = 1
-
-[node name="ProbabilityList" type="VBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer/ProbabilityContainer"]
-layout_mode = 2

@@ -17,7 +17,7 @@ signal teacher_mode_requested()
 # ============================================================================
 
 @onready var library_panel: Control = $MainVBox/MainHBox/LibraryPanel
-@onready var breeding_area: Control = $MainVBox/MainHBox/BreedingArea
+@onready var breeding_area: Control = $MainVBox/MainHBox/RecombinationArea
 @onready var level_dropdown: OptionButton = $MainVBox/TopBar/VBox/HBox/LevelDropdown
 @onready var teacher_mode_button: Button = $MainVBox/TopBar/VBox/HBox/TeacherModeButton
 @onready var settings_button: Button = $MainVBox/TopBar/VBox/HBox/SettingsButton

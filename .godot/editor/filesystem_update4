@@ -10,3 +10,13 @@ res://scripts/ui/BreedingArea.gd
 res://assets/themes/future_tech.theme.tres
 res://scenes/ui/LibraryPanel.tscn
 res://scripts/autoload/HumanGeneticsState.gd
+res://scripts/ui/AlleleChip.gd
+res://scripts/ui/LibraryPanel.gd
+res://scenes/ui/PunnettGrid.tscn
+res://scenes/ui/ParentSlot.tscn
+res://scripts/main/GeneticsLab.gd
+res://assets/fonts/default_font.tres
+res://scenes/ui/RecombinationArea.tscn
+res://scripts/ui/RecombinationArea.gd
+res://scenes/humans/HumanFace.tscn
+res://scripts/humans/HumanFace.gd

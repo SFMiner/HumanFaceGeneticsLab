@@ -24,6 +24,8 @@ signal favorite_toggled(human_id: int)
 @onready var favorite_button: Button = $VBox/ButtonRow/FavoriteButton
 @onready var delete_button: Button = $VBox/ButtonRow/DeleteButton
 @onready var generation_label: Label = $VBox/GenerationLabel
+@onready var root_vbox: VBoxContainer = $VBox
+@onready var face_container: Control = $VBox/FaceContainer
 
 # ============================================================================
 # STATE
@@ -39,6 +41,7 @@ var _human_data: Dictionary = {}
 func _ready() -> void:
 	_setup_connections()
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	_configure_drag_passthrough()
 
 
 func _setup_connections() -> void:
@@ -50,6 +53,20 @@ func _setup_connections() -> void:
 	gui_input.connect(_on_gui_input)
 
 
+func _configure_drag_passthrough() -> void:
+	var passthrough_controls: Array = [
+		root_vbox,
+		face_container,
+		face_display,
+		name_label,
+		traits_label,
+		generation_label
+	]
+	for control in passthrough_controls:
+		if control:
+			control.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
 # ============================================================================
 # SETUP
 # ============================================================================
@@ -58,10 +75,12 @@ func _setup_connections() -> void:
 func setup(human_data: Dictionary) -> void:
 	_human_data = human_data
 	_human_id = human_data.get("id", -1)
+	var genotype := HumanGeneticsState.normalize_genotype(human_data.get("genotype", {}))
+	# Recalculate phenotype with current level rules for consistent visuals.
+	var phenotype := HumanGeneticsState.calculate_phenotype(genotype)
 	
 	# Render face
 	if face_display:
-		var phenotype: Dictionary = human_data.get("phenotype", {})
 		face_display.render(phenotype)
 	
 	# Set name
@@ -70,7 +89,7 @@ func setup(human_data: Dictionary) -> void:
 	
 	# Set traits (visible traits based on level)
 	if traits_label:
-		traits_label.text = _format_traits(human_data.get("phenotype", {}))
+		traits_label.text = _format_traits(phenotype)
 	
 	# Set generation
 	if generation_label:

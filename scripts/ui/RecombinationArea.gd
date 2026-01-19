@@ -1,5 +1,5 @@
-# BreedingArea.gd
-# Central breeding workspace with parent slots, Punnett square, and offspring preview
+# RecombinationArea.gd
+# Central recombination workspace with parent slots, Punnett square, and offspring preview
 # Supports drag-drop parent selection and in-place genotype editing
 # Educational purpose: Demonstrate Mendelian inheritance and recombination
 
@@ -16,12 +16,12 @@ signal parent_selected(slot: String, human_id: int)
 # NODE REFERENCES
 # ============================================================================
 
-@onready var parent_a_slot: Control = $VBox/HBoxContainer/VBoxContainer/ParentsContainer/ParentASlot
-@onready var parent_b_slot: Control = $VBox/HBoxContainer/VBoxContainer/ParentsContainer/ParentBSlot
-@onready var punnett_grid: Control = $VBox/HBoxContainer/VBoxContainer2/PunnettContainer/PunnettGrid
-@onready var recombine_button: Button = $VBox/HBoxContainer/VBoxContainer2/RecombineButton
-@onready var offspring_preview: Control = $VBox/OffspringPreview
-@onready var allele_palette: Control = $VBox/HBoxContainer/VBoxContainer/AllelePalette
+@onready var parent_a_slot: Control = %ParentASlot
+@onready var parent_b_slot: Control = %ParentBSlot
+@onready var punnett_grid: Control = %PunnettGrid
+@onready var recombine_button: Button = %RecombineButton
+@onready var offspring_preview: Control = %OffspringPreview
+@onready var allele_palette: Control = %AllelePalette
 
 # ============================================================================
 # STATE
@@ -108,7 +108,7 @@ func on_level_changed(_level_id: int) -> void:
 	
 	# Update allele palette with new active genes
 	if allele_palette:
-		allele_palette.setup_for_level()
+		allele_palette.refresh()
 
 
 # ============================================================================
@@ -258,7 +258,7 @@ func _on_recombine_pressed() -> void:
 	if _parent_a_genotype.is_empty() or _parent_b_genotype.is_empty():
 		return
 	
-	# Check breeding mode
+	# Check recombination mode
 	var breeding_mode := TeacherModeState.get_breeding_mode()
 	
 	if breeding_mode == "preview":
@@ -269,37 +269,81 @@ func _on_recombine_pressed() -> void:
 	# Lock parents if setting is enabled
 	if TeacherModeState.are_parents_locked():
 		_parents_locked = true
+
+	# Enforce teacher-mode pairing rules before recombination.
+	if TeacherModeState.is_active() and _parent_a_id > 0 and _parent_b_id > 0:
+		if not TeacherModeState.can_breed(_parent_a_id, _parent_b_id):
+			return
 	
-	# Create temporary parents if needed
-	var parent_a_id := _parent_a_id
-	var parent_b_id := _parent_b_id
-	
-	if parent_a_id < 0:
-		# Save temporary parent
-		parent_a_id = HumanGeneticsState.add_human(_parent_a_genotype, "Temp Parent A", 0)
-	if parent_b_id < 0:
-		parent_b_id = HumanGeneticsState.add_human(_parent_b_genotype, "Temp Parent B", 0)
-	
-	# Perform breeding
 	var selected_cell: int = -1
 	if breeding_mode == "fixed":
 		selected_cell = TeacherModeState.get_fixed_cell_index()
 	
-	var offspring_id := HumanGeneticsState.breed(parent_a_id, parent_b_id, selected_cell)
+	var offspring_data := _build_offspring_data(selected_cell)
+	if offspring_data.is_empty():
+		return
 	
-	if offspring_id > 0:
-		_current_offspring_id = offspring_id
-		_show_offspring(offspring_id)
-		offspring_created.emit(offspring_id)
+	_current_offspring_id = -1
+	_show_offspring_data(offspring_data)
 
-
-func _show_offspring(human_id: int) -> void:
+func _show_offspring_data(offspring_data: Dictionary) -> void:
 	if not offspring_preview:
 		return
 	
-	var human := HumanGeneticsState.get_human(human_id)
-	if not human.is_empty():
-		offspring_preview.show_offspring(human)
+	offspring_preview.show_offspring(offspring_data)
+
+
+func _build_offspring_data(selected_cell: int) -> Dictionary:
+	var active_genes := HumanGeneticsState.get_active_genes()
+	# Build full Punnett space, then pick one cell (deterministic if configured).
+	var gametes_a := HumanGeneticsState.build_gametes(_parent_a_genotype, active_genes)
+	var gametes_b := HumanGeneticsState.build_gametes(_parent_b_genotype, active_genes)
+	
+	if gametes_a.is_empty() or gametes_b.is_empty():
+		return {}
+	
+	var punnett: Array = []
+	for ga in gametes_a:
+		for gb in gametes_b:
+			var combined := {}
+			for gene_id in active_genes:
+				var fallback: Array = HumanGeneticsState.CONVENIENCE_GENOTYPES.get(gene_id, ["A", "a"])
+				var allele_a: String = ga.get(gene_id, fallback[0])
+				var allele_b: String = gb.get(gene_id, fallback[1])
+				combined[gene_id] = [allele_a, allele_b]
+			combined = HumanGeneticsState.apply_convenience_genotypes(combined)
+			punnett.append(combined)
+	
+	if punnett.is_empty():
+		return {}
+	
+	var cell_index := selected_cell
+	if cell_index < 0 or cell_index >= punnett.size():
+		if TeacherModeState.is_active() and TeacherModeState.is_deterministic():
+			cell_index = TeacherModeState.get_seeded_random_int(0, punnett.size() - 1)
+		else:
+			cell_index = HumanGeneticsState.rng.randi_range(0, punnett.size() - 1)
+	
+	var genotype: Dictionary = punnett[cell_index]
+	genotype = HumanGeneticsState.sanitize_genotype_for_level(genotype)
+	var phenotype: Dictionary = HumanGeneticsState.calculate_phenotype(genotype)
+	
+	var parent_a_gen := 0
+	var parent_b_gen := 0
+	if _parent_a_id > 0:
+		parent_a_gen = HumanGeneticsState.get_human(_parent_a_id).get("generation", 0)
+	if _parent_b_id > 0:
+		parent_b_gen = HumanGeneticsState.get_human(_parent_b_id).get("generation", 0)
+	
+	var offspring_gen: int = max(parent_a_gen, parent_b_gen) + 1
+	
+	return {
+		"genotype": genotype,
+		"phenotype": phenotype,
+		"generation": offspring_gen,
+		"parent_a_id": _parent_a_id,
+		"parent_b_id": _parent_b_id
+	}
 
 
 func _show_probability_preview() -> void:
@@ -320,6 +364,7 @@ func _show_probability_preview() -> void:
 	# Format: {"eye_color": {"brown": 0.25, "blue": 0.75}, "skin_tone": {...}}
 	var trait_counts: Dictionary = {}
 	var total := 0
+	var displayed_traits: Array = HumanGeneticsState.get_traits_displayed()
 	
 	for ga in gametes_a:
 		for gb in gametes_b:
@@ -332,6 +377,8 @@ func _show_probability_preview() -> void:
 			
 			# Count each trait's phenotype
 			for trait_name in phenotype:
+				if trait_name not in displayed_traits:
+					continue
 				if not trait_counts.has(trait_name):
 					trait_counts[trait_name] = {}
 				var trait_value: String = phenotype[trait_name]

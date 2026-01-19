@@ -1,0 +1,96 @@
+[gd_scene load_steps=7 format=3 uid="uid://bv3jcvn3xh1cf"]
+
+[ext_resource type="Script" uid="uid://uy61bonufekn" path="res://scripts/ui/RecombinationArea.gd" id="1_breeding"]
+[ext_resource type="FontFile" uid="uid://bsfuht6qufe6c" path="res://assets/fonts/header_font.ttf" id="2_4b2ly"]
+[ext_resource type="PackedScene" uid="uid://b37i7ijp5sffl" path="res://scenes/ui/ParentSlot.tscn" id="2_parentslot"]
+[ext_resource type="PackedScene" uid="uid://co26eb2p5sffl" path="res://scenes/ui/PunnettGrid.tscn" id="3_punnett"]
+[ext_resource type="PackedScene" uid="uid://p7kfl1s05v07" path="res://scenes/ui/OffspringPreview.tscn" id="4_offspring"]
+[ext_resource type="PackedScene" uid="uid://callpal001scn" path="res://scenes/ui/AllelePalette.tscn" id="5_palette"]
+
+[node name="RecombinationArea" type="PanelContainer"]
+offset_right = 879.0
+offset_bottom = 1258.0
+script = ExtResource("1_breeding")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBox/HBoxContainer"]
+layout_mode = 2
+
+[node name="HeaderLabel" type="Label" parent="VBox/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_4b2ly")
+theme_override_font_sizes/font_size = 16
+text = "Recombination Area"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBox/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ParentsContainer" type="HBoxContainer" parent="VBox/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ParentASlot" parent="VBox/HBoxContainer/VBoxContainer/HBoxContainer/ParentsContainer" instance=ExtResource("2_parentslot")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 420)
+layout_mode = 2
+
+[node name="XLabel" type="Label" parent="VBox/HBoxContainer/VBoxContainer/HBoxContainer/ParentsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "×"
+
+[node name="ParentBSlot" parent="VBox/HBoxContainer/VBoxContainer/HBoxContainer/ParentsContainer" instance=ExtResource("2_parentslot")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 420)
+layout_mode = 2
+
+[node name="AllelePalette" parent="VBox/HBoxContainer/VBoxContainer" instance=ExtResource("5_palette")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(125, 175)
+layout_mode = 2
+
+[node name="Container" type="Container" parent="VBox/HBoxContainer"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBox/HBoxContainer"]
+layout_mode = 2
+
+[node name="PunnettContainer" type="VBoxContainer" parent="VBox/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PunnettLabel" type="Label" parent="VBox/HBoxContainer/VBoxContainer2/PunnettContainer"]
+visible = false
+layout_mode = 2
+text = "Punnett Square"
+horizontal_alignment = 1
+
+[node name="PunnettGrid" parent="VBox/HBoxContainer/VBoxContainer2/PunnettContainer" instance=ExtResource("3_punnett")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RecombineButton" type="Button" parent="VBox/HBoxContainer/VBoxContainer2/PunnettContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+disabled = true
+text = "Recombine"
+
+[node name="OffspringPreview" parent="VBox/HBoxContainer/VBoxContainer2/PunnettContainer" instance=ExtResource("4_offspring")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4

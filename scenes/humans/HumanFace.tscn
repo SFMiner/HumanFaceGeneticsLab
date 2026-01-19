@@ -1,9 +1,27 @@
-[gd_scene load_steps=2 format=3 uid="uid://chumface001scn"]
+[gd_scene load_steps=18 format=3 uid="uid://cfuu18w8a65w4"]
 
-[ext_resource type="Script" uid="uid://chumface001scr" path="res://scripts/humans/HumanFace.gd" id="1_face"]
+[ext_resource type="Script" uid="uid://c2unxrdc2n7xn" path="res://scripts/humans/HumanFace.gd" id="1_face"]
+[ext_resource type="Texture2D" uid="uid://dm48l1fqvrdj4" path="res://assets/face/neck.png" id="2_tw0r3"]
+[ext_resource type="Texture2D" uid="uid://o3iqqaew1cfs" path="res://assets/face/face.png" id="3_kgohr"]
+[ext_resource type="Texture2D" uid="uid://eko7royx7vt3" path="res://assets/face/ear_r.png" id="4_vgur0"]
+[ext_resource type="Texture2D" uid="uid://bacfd4l3ct17j" path="res://assets/face/ear_l.png" id="5_wsskw"]
+[ext_resource type="Texture2D" uid="uid://b0h5iy8k34ln7" path="res://assets/face/hair1.png" id="6_suoqq"]
+[ext_resource type="Texture2D" uid="uid://wm7plhm5sd48" path="res://assets/face/eye_l.png" id="7_kuiri"]
+[ext_resource type="Texture2D" uid="uid://c7hlms8pmmm67" path="res://assets/face/eye_r.png" id="8_eewgx"]
+[ext_resource type="Texture2D" uid="uid://cmv3ohwq046uu" path="res://assets/face/iris_l.png" id="9_2tqho"]
+[ext_resource type="Texture2D" uid="uid://brjjgeq7kt48p" path="res://assets/face/iris_r.png" id="10_ukg1d"]
+[ext_resource type="Texture2D" uid="uid://boxfvtsckgb4n" path="res://assets/face/nose.png" id="11_nsu7l"]
+[ext_resource type="Texture2D" uid="uid://cjejuxsavv11m" path="res://assets/face/pupil_l.png" id="12_jcsu0"]
+[ext_resource type="Texture2D" uid="uid://b30tol4s4pdgr" path="res://assets/face/pupil_r.png" id="13_2joxe"]
+[ext_resource type="Texture2D" uid="uid://u0aptc7dletj" path="res://assets/face/lip_l.png" id="14_tpxmt"]
+[ext_resource type="Texture2D" uid="uid://iopo4uafulsm" path="res://assets/face/lip_u.png" id="15_ccxae"]
+[ext_resource type="Texture2D" uid="uid://bd14nnaorfl18" path="res://assets/face/lash_r.png" id="16_vgur0"]
+[ext_resource type="Texture2D" uid="uid://dh7qut7m4kuup" path="res://assets/face/lash_l.png" id="17_wsskw"]
 
 [node name="HumanFace" type="Control"]
 custom_minimum_size = Vector2(100, 120)
+layout_mode = 3
+anchors_preset = 0
 script = ExtResource("1_face")
 
 [node name="Layers" type="Control" parent="."]
@@ -43,7 +61,6 @@ anchor_right = 0.8
 anchor_bottom = 0.45
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(1, 1, 1, 1)
 
 [node name="IrisLeft" type="ColorRect" parent="Layers"]
 layout_mode = 1
@@ -71,12 +88,75 @@ color = Color(0.24, 0.18, 0.12, 1)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.1
-anchor_top = 0.0
 anchor_right = 0.9
 anchor_bottom = 0.3
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.12, 0.09, 0.06, 1)
+
+[node name="Neck" type="Sprite2D" parent="Layers"]
+position = Vector2(49, 98)
+texture = ExtResource("2_tw0r3")
+
+[node name="Face" type="Sprite2D" parent="Layers/Neck"]
+position = Vector2(-2, -42)
+texture = ExtResource("3_kgohr")
+
+[node name="Nose" type="Sprite2D" parent="Layers/Neck/Face"]
+position = Vector2(0, 2)
+texture = ExtResource("11_nsu7l")
+
+[node name="LipL" type="Sprite2D" parent="Layers/Neck/Face"]
+position = Vector2(-1, 25)
+texture = ExtResource("14_tpxmt")
+
+[node name="LipU" type="Sprite2D" parent="Layers/Neck/Face/LipL"]
+position = Vector2(0, -3)
+texture = ExtResource("15_ccxae")
+
+[node name="EarR" type="Sprite2D" parent="Layers/Neck"]
+position = Vector2(28.5, -37.5)
+texture = ExtResource("4_vgur0")
+
+[node name="EarL" type="Sprite2D" parent="Layers/Neck/EarR"]
+position = Vector2(-61, 1)
+texture = ExtResource("5_wsskw")
+
+[node name="Hair" type="Sprite2D" parent="Layers"]
+position = Vector2(47, 32)
+texture = ExtResource("6_suoqq")
+
+[node name="EyeL" type="Sprite2D" parent="Layers"]
+position = Vector2(34, 49)
+texture = ExtResource("7_kuiri")
+
+[node name="EyeR" type="Sprite2D" parent="Layers/EyeL"]
+position = Vector2(24, 0)
+texture = ExtResource("8_eewgx")
+
+[node name="IrisL" type="Sprite2D" parent="Layers"]
+position = Vector2(58, 49)
+texture = ExtResource("9_2tqho")
+
+[node name="IrisR" type="Sprite2D" parent="Layers"]
+position = Vector2(34, 49)
+texture = ExtResource("10_ukg1d")
+
+[node name="PupilL" type="Sprite2D" parent="Layers"]
+position = Vector2(34, 48)
+texture = ExtResource("12_jcsu0")
+
+[node name="PupilR" type="Sprite2D" parent="Layers"]
+position = Vector2(58, 48)
+texture = ExtResource("13_2joxe")
+
+[node name="LashR" type="Sprite2D" parent="Layers"]
+position = Vector2(58, 48)
+texture = ExtResource("16_vgur0")
+
+[node name="LashL" type="Sprite2D" parent="Layers"]
+position = Vector2(33, 48)
+texture = ExtResource("17_wsskw")
 
 [node name="FreckleLayer" type="ColorRect" parent="Layers"]
 visible = false

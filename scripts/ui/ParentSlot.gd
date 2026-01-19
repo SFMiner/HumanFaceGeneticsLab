@@ -19,9 +19,11 @@ signal cleared()
 
 @onready var face_display: Control = $VBox/FaceContainer/FaceDisplay
 @onready var name_label: Label = $VBox/NameLabel
-@onready var genotype_container: VBoxContainer = $VBox/GenotypeContainer
+@onready var genotype_container: VBoxContainer = %GenotypeContainer
 @onready var drop_hint: Label = $VBox/FaceContainer/DropHint
 @onready var clear_button: Button = $VBox/ClearButton
+@onready var root_vbox: VBoxContainer = $VBox
+@onready var face_container: Control = $VBox/FaceContainer
 
 # ============================================================================
 # CONSTANTS
@@ -46,11 +48,25 @@ func _ready() -> void:
 	_setup_connections()
 	_update_display()
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	_configure_drop_passthrough()
 
 
 func _setup_connections() -> void:
 	if clear_button:
 		clear_button.pressed.connect(_on_clear_pressed)
+
+
+func _configure_drop_passthrough() -> void:
+	var passthrough_controls: Array = [
+		root_vbox,
+		face_container,
+		face_display,
+		drop_hint,
+		name_label
+	]
+	for control in passthrough_controls:
+		if control:
+			control.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 # ============================================================================
@@ -137,7 +153,10 @@ func _show_human_state() -> void:
 			else:
 				name_label.text = base_name
 		else:
-			name_label.text = "Custom Genotype"
+			if _is_modified:
+				name_label.text = "Custom Genotype (modified)"
+			else:
+				name_label.text = "Custom Genotype"
 	
 	if clear_button:
 		clear_button.visible = true
@@ -162,6 +181,7 @@ func _update_genotype_display() -> void:
 	# Only show genotype if Teacher Mode allows
 	if not TeacherModeState.should_show_genotype():
 		return
+	# GenotypeContainer sits in a ScrollContainer to handle long allele lists.
 	
 	var active_genes := HumanGeneticsState.get_active_genes()
 	
@@ -205,14 +225,21 @@ func _on_allele_removed(gene_id: String) -> void:
 
 func _can_drop_data(_position: Vector2, data: Variant) -> bool:
 	if data is not Dictionary:
+		_is_drop_target = false
+		queue_redraw()
 		return false
 	
 	# Check if parents are locked
 	if TeacherModeState.are_parents_locked() and has_human():
+		_is_drop_target = false
+		queue_redraw()
 		return false
 	
 	var data_type: String = data.get("type", "")
-	return data_type in ["human", "allele_pair"]
+	var can_drop := data_type in ["human", "allele_pair", "allele_chip"]
+	_is_drop_target = can_drop
+	queue_redraw()
+	return can_drop
 
 
 func _drop_data(_position: Vector2, data: Variant) -> void:
@@ -226,7 +253,7 @@ func _drop_data(_position: Vector2, data: Variant) -> void:
 			var id: int = data.get("id", -1)
 			if id > 0:
 				human_dropped.emit(id)
-		"allele_pair":
+		"allele_pair", "allele_chip":
 			_handle_allele_drop(data)
 	
 	_is_drop_target = false
@@ -254,13 +281,7 @@ func _handle_allele_drop(data: Dictionary) -> void:
 
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_DRAG_BEGIN:
-		# Check if we can receive this drag
-		var drag_data = get_viewport().gui_get_drag_data()
-		if _can_drop_data(Vector2.ZERO, drag_data):
-			_is_drop_target = true
-			queue_redraw()
-	elif what == NOTIFICATION_DRAG_END:
+	if what == NOTIFICATION_DRAG_END:
 		_is_drop_target = false
 		queue_redraw()
 

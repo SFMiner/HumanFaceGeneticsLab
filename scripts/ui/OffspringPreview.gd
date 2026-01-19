@@ -4,23 +4,24 @@ class_name OffspringPreview
 
 signal offspring_saved(human_id: int)
 
-@onready var face_container: CenterContainer = $MarginContainer/HBoxContainer/VBoxContainer2/FaceContainer
-@onready var face_placeholder: ColorRect = $MarginContainer/HBoxContainer/VBoxContainer2/FaceContainer/FacePlaceholder
-@onready var eye_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer/EyeLabel
-@onready var skin_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer/SkinLabel
-@onready var hair_color_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer/HairColorLabel
-@onready var hair_texture_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer/HairTextureLabel
-@onready var genotype_container: VBoxContainer = $MarginContainer/HBoxContainer/VBoxContainer/GenotypeContainer
-@onready var genotype_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/GenotypeContainer/GenotypeLabel
-@onready var probability_container: VBoxContainer = $MarginContainer/HBoxContainer/VBoxContainer/ProbabilityContainer
-@onready var probability_list: VBoxContainer = $MarginContainer/HBoxContainer/VBoxContainer/ProbabilityContainer/ProbabilityList
-@onready var phenotype_container: VBoxContainer = $MarginContainer/HBoxContainer/VBoxContainer/PhenotypeContainer
-@onready var button_container: HBoxContainer = $MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer
-@onready var save_button: Button = $MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer/SaveButton
-@onready var name_input: LineEdit = $MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer/NameInput
-@onready var random_name_button: Button = $MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer/RandomNameButton
-@onready var confirm_button: Button = $MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer/ConfirmButton
-@onready var cancel_button: Button = $MarginContainer/HBoxContainer/VBoxContainer2/ButtonContainer/CancelButton
+@onready var face_container: CenterContainer = %FaceContainer
+@onready var face_placeholder: ColorRect = %FacePlaceholder
+@onready var eye_label: Label = %EyeLabel
+@onready var skin_label: Label = %SkinLabel
+@onready var hair_color_label: Label = %HairColorLabel
+@onready var hair_texture_label: Label = %HairTextureLabel
+@onready var genotype_container: VBoxContainer = %GenotypeContainer
+@onready var genotype_label: Label = %GenotypeLabel
+@onready var probability_container: VBoxContainer = %ProbabilityContainer
+@onready var probability_list: VBoxContainer = %ProbabilityList
+@onready var phenotype_container: VBoxContainer = %PhenotypeContainer
+@onready var button_container: HBoxContainer = %ButtonContainer
+@onready var unsaved_badge: Label = %UnsavedBadge
+@onready var save_button: Button = %SaveButton
+@onready var name_input: LineEdit = %NameInput
+@onready var random_name_button: Button = %RandomNameButton
+@onready var confirm_button: Button = %ConfirmButton
+@onready var cancel_button: Button = %CancelButton
 
 const HumanFaceScene := preload("res://scenes/humans/HumanFace.tscn")
 
@@ -45,14 +46,13 @@ func _show_empty_state() -> void:
 	genotype_container.visible = false
 	probability_container.visible = false
 	save_button.visible = false
+	if unsaved_badge:
+		unsaved_badge.visible = false
 	_exit_naming_mode()
 	
 	face_placeholder.visible = true
 	
-	eye_label.text = "Eyes: --"
-	skin_label.text = "Skin: --"
-	hair_color_label.text = "Hair: --"
-	hair_texture_label.text = "Texture: --"
+	_update_phenotype_labels({})
 	genotype_label.text = "--"
 	
 	if face_instance:
@@ -67,8 +67,11 @@ func show_offspring(offspring_data: Dictionary) -> void:
 	
 	probability_container.visible = false
 	phenotype_container.visible = true
+	# Hide genotype details when Teacher Mode limits visibility.
 	genotype_container.visible = TeacherModeState.get_trait_visibility() != "phenotype"
 	save_button.visible = true
+	if unsaved_badge:
+		unsaved_badge.visible = true
 	_exit_naming_mode()
 	
 	# Render face
@@ -80,7 +83,9 @@ func show_offspring(offspring_data: Dictionary) -> void:
 	face_container.add_child(face_instance)
 	
 	var phenotype: Dictionary = offspring_data.get("phenotype", {})
-	if face_instance.has_method("render_phenotype"):
+	if face_instance.has_method("render"):
+		face_instance.render(phenotype)
+	elif face_instance.has_method("render_phenotype"):
 		face_instance.render_phenotype(phenotype)
 	
 	# Update labels
@@ -97,6 +102,8 @@ func show_probability_preview(ratios: Dictionary) -> void:
 	phenotype_container.visible = false
 	genotype_container.visible = false
 	save_button.visible = false
+	if unsaved_badge:
+		unsaved_badge.visible = false
 	_exit_naming_mode()
 	probability_container.visible = true
 	
@@ -148,25 +155,36 @@ func show_probability_preview(ratios: Dictionary) -> void:
 
 
 func _update_phenotype_labels(phenotype: Dictionary) -> void:
-	if phenotype.has("eye_color"):
-		eye_label.text = "Eyes: " + _format_phenotype_name(phenotype.eye_color)
-	else:
-		eye_label.text = "Eyes: --"
+	var displayed_traits: Array = HumanGeneticsState.get_traits_displayed()
 	
-	if phenotype.has("skin_tone"):
-		skin_label.text = "Skin: " + _format_phenotype_name(phenotype.skin_tone)
-	else:
-		skin_label.text = "Skin: --"
+	eye_label.visible = "eye_color" in displayed_traits
+	skin_label.visible = "skin_tone" in displayed_traits
+	hair_color_label.visible = "hair_color" in displayed_traits
+	hair_texture_label.visible = "hair_texture" in displayed_traits
 	
-	if phenotype.has("hair_color"):
-		hair_color_label.text = "Hair: " + _format_phenotype_name(phenotype.hair_color)
-	else:
-		hair_color_label.text = "Hair: --"
+	if eye_label.visible:
+		if phenotype.has("eye_color"):
+			eye_label.text = "Eyes: " + _format_phenotype_name(phenotype.eye_color)
+		else:
+			eye_label.text = "Eyes: --"
 	
-	if phenotype.has("hair_texture"):
-		hair_texture_label.text = "Texture: " + _format_phenotype_name(phenotype.hair_texture)
-	else:
-		hair_texture_label.text = "Texture: --"
+	if skin_label.visible:
+		if phenotype.has("skin_tone"):
+			skin_label.text = "Skin: " + _format_phenotype_name(phenotype.skin_tone)
+		else:
+			skin_label.text = "Skin: --"
+	
+	if hair_color_label.visible:
+		if phenotype.has("hair_color"):
+			hair_color_label.text = "Hair: " + _format_phenotype_name(phenotype.hair_color)
+		else:
+			hair_color_label.text = "Hair: --"
+	
+	if hair_texture_label.visible:
+		if phenotype.has("hair_texture"):
+			hair_texture_label.text = "Texture: " + _format_phenotype_name(phenotype.hair_texture)
+		else:
+			hair_texture_label.text = "Texture: --"
 
 
 func _update_genotype_label(genotype: Dictionary) -> void:
@@ -178,9 +196,26 @@ func _update_genotype_label(genotype: Dictionary) -> void:
 			continue
 		if genotype.has(gene_id):
 			var alleles: Array = genotype[gene_id]
-			parts.append(gene_id + ": " + str(alleles[0]) + str(alleles[1]))
+			parts.append(gene_id + ": " + _format_allele_pair(alleles, gene_id))
 	
 	genotype_label.text = " | ".join(parts) if parts.size() > 0 else "--"
+
+
+func _format_allele_pair(alleles: Array, gene_id: String) -> String:
+	if alleles.size() < 2:
+		return "??"
+	
+	var gene_info: Dictionary = HumanGeneticsState.get_gene_info(gene_id)
+	if gene_info.is_empty():
+		return str(alleles[0]) + str(alleles[1])
+	
+	var dom: String = gene_info.get("dom", "")
+	var rec: String = gene_info.get("rec", "")
+	
+	if dom != "" and rec != "" and dom in alleles and rec in alleles:
+		return dom + rec
+	
+	return str(alleles[0]) + str(alleles[1])
 
 
 func _format_phenotype_name(raw: String) -> String:

@@ -5,6 +5,7 @@
 			"name": "Eye Color Basics",
 			"description": "Learn epistasis and dominance with 3 eye color genes",
 			"active_genes": ["TYR", "OCA2", "HERC2"],
+			"allow_albinism": false,
 			"traits_displayed": ["eye_color"],
 			"max_punnett_genes": 2,
 			"starter_humans": [
@@ -76,7 +77,7 @@
 			"id": 5,
 			"name": "Complete Human Variation",
 			"description": "All traits with hair texture",
-			"active_genes": ["TYR", "OCA2", "HERC2", "TYRP1", "SLC24A5", "SLC45A2", "MC1R", "TCHH"],
+			"active_genes": ["TYR", "ALB", "OCA2", "HERC2", "TYRP1", "SLC24A5", "SLC45A2", "MC1R", "TCHH"],
 			"traits_displayed": ["eye_color", "skin_tone", "hair_color", "hair_texture"],
 			"max_punnett_genes": 2,
 			"starter_humans": [

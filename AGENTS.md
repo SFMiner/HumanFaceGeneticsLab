@@ -6,10 +6,12 @@
 - `scripts/` holds GDScript logic, grouped by feature: `autoload/`, `main/`, `humans/`, and `ui/`.
 - `data/` stores gameplay configuration JSON (levels, names, teacher mode defaults).
 - `assets/` includes fonts, themes, and visual resources; `.godot/` is editor-generated and should not be manually edited.
+- Offspring previews show an "Unsaved result" badge until explicitly saved to the library.
+- `scenes/ui/ParentSlot.tscn` wraps the genotype list in a `ScrollContainer` to support more than 3 allele rows.
 
 ## Build, Test, and Development Commands
 - Open the project in Godot 4.5+ and run the main scene: `scenes/main/GeneticsLab.tscn` (F5).
-- Optional CLI launch (if Godot is in PATH): open the editor with `godot4 --path .` and run the main scene from there.
+- CLI launch (Windows): `"C:\Users\seanm\Nextcloud2\Gamedev\GodotGames\Godot_v4.5-stable_win64.exe" --path .` to open the editor, then run the main scene.
 
 ## Coding Style & Naming Conventions
 - GDScript uses tabs for indentation in this repo; keep existing alignment.
@@ -31,3 +33,6 @@
 ## Configuration & Content Tips
 - Level progression lives in `data/levels.json`; keep level IDs stable to avoid breaking saved data.
 - Genetic logic is centralized in `scripts/autoload/HumanGeneticsState.gd`; update related UI text when changing genetics rules.
+
+## Terminology
+- Use **recombination** instead of "breeding" in UI, comments, and documentation to align with ethical guidelines.

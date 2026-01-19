@@ -5,7 +5,10 @@ class_name AlleleChip
 
 signal chip_removed(gene_id: String)
 signal chip_clicked(gene_id: String)
+signal allele_changed(gene_id: String, new_alleles: Array)
+signal allele_removed(gene_id: String)
 
+@onready var hbox: HBoxContainer = $HBox
 @onready var gene_label: Label = $HBox/GeneLabel
 @onready var allele_label: Label = $HBox/AlleleLabel
 @onready var remove_button: Button = $HBox/RemoveButton
@@ -14,6 +17,7 @@ var gene_id: String = ""
 var alleles: Array = []  # ["A", "a"]
 var is_draggable: bool = true
 var show_remove_button: bool = true
+var _pending_display_update: bool = false
 
 ## Color coding for dominance patterns
 const COLORS = {
@@ -30,6 +34,8 @@ func _ready() -> void:
 		remove_button.visible = show_remove_button
 	
 	gui_input.connect(_on_gui_input)
+	_configure_input_passthrough()
+	_update_display()
 
 
 func setup(p_gene_id: String, p_alleles: Array, p_draggable: bool = true, p_show_remove: bool = true) -> void:
@@ -38,18 +44,31 @@ func setup(p_gene_id: String, p_alleles: Array, p_draggable: bool = true, p_show
 	is_draggable = p_draggable
 	show_remove_button = p_show_remove
 	
-	_update_display()
+	if is_node_ready():
+		_update_display()
+	else:
+		_pending_display_update = true
+
+
+func _configure_input_passthrough() -> void:
+	if hbox:
+		hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if gene_label:
+		gene_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if allele_label:
+		allele_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func _update_display() -> void:
+	if _pending_display_update:
+		_pending_display_update = false
 	if gene_label:
 		gene_label.text = gene_id + ":"
 	
 	if allele_label:
-		var allele_str := ""
-		if alleles.size() >= 2:
-			allele_str = alleles[0] + alleles[1]
+		var allele_str := _format_allele_pair(alleles)
 		allele_label.text = allele_str
+		_update_tooltip(allele_str)
 	
 	# Color based on dominance pattern
 	var gene_info: Dictionary = HumanGeneticsState.get_gene_info(gene_id)
@@ -74,6 +93,7 @@ func _update_display() -> void:
 
 
 func _on_remove_pressed() -> void:
+	allele_removed.emit(gene_id)
 	chip_removed.emit(gene_id)
 
 
@@ -90,6 +110,8 @@ func _get_drag_data(_position: Vector2) -> Variant:
 	# Create visual preview
 	var preview := duplicate() as AlleleChip
 	preview.modulate.a = 0.7
+	preview.scale = Vector2(1.05, 1.05)
+	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	preview.show_remove_button = false
 	if preview.has_node("HBox/RemoveButton"):
 		preview.get_node("HBox/RemoveButton").visible = false
@@ -109,3 +131,28 @@ func get_allele_pair() -> Array:
 func set_allele_pair(new_alleles: Array) -> void:
 	alleles = new_alleles.duplicate()
 	_update_display()
+	allele_changed.emit(gene_id, alleles.duplicate())
+
+
+func _update_tooltip(allele_str: String) -> void:
+	var gene_name := HumanGeneticsState.get_gene_full_name(gene_id)
+	if gene_name.is_empty():
+		gene_name = gene_id
+	tooltip_text = "%s (%s)" % [gene_name, allele_str]
+
+
+func _format_allele_pair(pair: Array) -> String:
+	if pair.size() < 2:
+		return "??"
+	
+	var gene_info: Dictionary = HumanGeneticsState.get_gene_info(gene_id)
+	if gene_info.is_empty():
+		return str(pair[0]) + str(pair[1])
+	
+	var dom: String = gene_info.get("dom", "")
+	var rec: String = gene_info.get("rec", "")
+	
+	if dom != "" and rec != "" and dom in pair and rec in pair:
+		return dom + rec
+	
+	return str(pair[0]) + str(pair[1])

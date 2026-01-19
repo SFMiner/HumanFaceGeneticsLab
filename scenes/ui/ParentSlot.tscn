@@ -1,26 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://cparslot001scn"]
+[gd_scene load_steps=4 format=3 uid="uid://b37i7ijp5sffl"]
 
-[ext_resource type="Script" uid="uid://cparslot001scr" path="res://scripts/ui/ParentSlot.gd" id="1_parentslot"]
-[ext_resource type="PackedScene" uid="uid://chumface001scn" path="res://scenes/humans/HumanFace.tscn" id="2_face"]
+[ext_resource type="Script" uid="uid://d05ec8yxoldr4" path="res://scripts/ui/ParentSlot.gd" id="1_parentslot"]
+[ext_resource type="PackedScene" uid="uid://cfuu18w8a65w4" path="res://scenes/humans/HumanFace.tscn" id="2_face"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 bg_color = Color(0.2, 0.22, 0.25, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.35, 0.38, 0.42, 1)
-corner_radius_left = 8
-corner_radius_top = 8
-corner_radius_right = 8
-corner_radius_bottom = 8
-content_margin_left = 10.0
-content_margin_top = 10.0
-content_margin_right = 10.0
-content_margin_bottom = 10.0
 
 [node name="ParentSlot" type="PanelContainer"]
-custom_minimum_size = Vector2(180, 280)
+custom_minimum_size = Vector2(180, 450)
 theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
 script = ExtResource("1_parentslot")
 
@@ -30,8 +26,8 @@ theme_override_constants/separation = 8
 
 [node name="SlotLabel" type="Label" parent="VBox"]
 layout_mode = 2
-text = "Parent"
 theme_override_font_sizes/font_size = 12
+text = "Parent"
 horizontal_alignment = 1
 
 [node name="FaceContainer" type="CenterContainer" parent="VBox"]
@@ -56,12 +52,17 @@ layout_mode = 2
 text = "Parent"
 horizontal_alignment = 1
 
-[node name="GenotypeContainer" type="VBoxContainer" parent="VBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBox"]
+custom_minimum_size = Vector2(0, 190)
 layout_mode = 2
+
+[node name="GenotypeContainer" type="VBoxContainer" parent="VBox/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 4
 
 [node name="ClearButton" type="Button" parent="VBox"]
-visible = false
 layout_mode = 2
 text = "Clear"

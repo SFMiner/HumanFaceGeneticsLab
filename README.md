@@ -19,7 +19,7 @@ An educational genetics simulator for Godot 4.5 that teaches polygenic inheritan
 
 ### Teacher Mode
 - Gene visibility constraints
-- Breeding restrictions (max genes per cross, parent locking)
+- Recombination restrictions (max genes per cross, parent locking)
 - Deterministic randomness for reproducible demonstrations
 - Probability preview mode (ratios without offspring)
 - Ethical safeguards (neutral language, modeling disclaimers)
@@ -53,8 +53,8 @@ An educational genetics simulator for Godot 4.5 that teaches polygenic inheritan
 │   │   └── HumanCard.tscn    # Library card
 │   └── ui/
 │       ├── LibraryPanel.tscn
-│       ├── BreedingArea.tscn
-│       ├── ParentSlot.tscn
+│       ├── RecombinationArea.tscn
+│       ├── ParentSlot.tscn    # Genotype list uses a ScrollContainer for long allele lists
 │       ├── PunnettGrid.tscn
 │       ├── OffspringPreview.tscn
 │       ├── AllelePalette.tscn
@@ -94,6 +94,9 @@ Edit `data/teacher_mode_defaults.json` to set default constraints.
 - Desktop (1280×720 base resolution)
 - Web export compatible
 
+## Terminology
+
+This project uses **recombination** as the preferred term in UI and docs (replacing "breeding") in line with ethical guidelines.
 ## License
 
 Educational use permitted. See full GDD for ethical guidelines.
@@ -101,3 +104,5 @@ Educational use permitted. See full GDD for ethical guidelines.
 ## Credits
 
 Design based on real human genetics research. See GDD Section 2 for gene references.
+
+
