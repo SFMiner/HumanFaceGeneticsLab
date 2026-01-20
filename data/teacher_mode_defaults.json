@@ -1,7 +1,7 @@
 {
 	"active": false,
 	"active_genes": ["TYR", "OCA2", "HERC2"],
-	"max_genes_per_cross": 2,
+	"max_genes_per_cross": 3,
 	"punnett_display_mode": "full",
 	"trait_visibility": "both",
 	"breeding_mode": "random",

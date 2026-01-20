@@ -1,0 +1,65 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckeq5ck62vje7"]
+
+[ext_resource type="Script" uid="uid://18hxt5dmed3q" path="res://scripts/ui/tutorial_panel.gd" id="1_yt4dy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yt4dy"]
+bg_color = Color(0.69411767, 0.5882353, 0.34509805, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+corner_radius_top_left = 7
+corner_radius_top_right = 7
+corner_radius_bottom_right = 7
+corner_radius_bottom_left = 7
+
+[node name="TutorialPanel" type="PanelContainer"]
+offset_right = 234.0
+offset_bottom = 152.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_yt4dy")
+script = ExtResource("1_yt4dy")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TopRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="VBox/TopRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="VBox/TopRow"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+text = "X"
+
+[node name="TextLabel" type="Label" parent="VBox"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "tutorial text"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="RememberCheck" type="CheckBox" parent="VBox"]
+layout_mode = 2
+text = "Remember this"
+
+[node name="ButtonRow" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="YesButton" type="Button" parent="VBox/ButtonRow"]
+layout_mode = 2
+text = "Yes"
+
+[node name="NoButton" type="Button" parent="VBox/ButtonRow"]
+layout_mode = 2
+text = "No"
+
+[node name="NotNowButton" type="Button" parent="VBox/ButtonRow"]
+layout_mode = 2
+text = "Not right now"

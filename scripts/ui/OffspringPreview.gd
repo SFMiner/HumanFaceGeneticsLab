@@ -19,8 +19,8 @@ signal offspring_saved(human_id: int)
 @onready var unsaved_badge: Label = %UnsavedBadge
 @onready var save_button: Button = %SaveButton
 @onready var name_input: LineEdit = %NameInput
-@onready var random_name_button: Button = %RandomNameButton
-@onready var confirm_button: Button = %ConfirmButton
+@onready var random_name_button: TextureButton = %RandomNameButton
+@onready var confirm_button: TextureButton = %ConfirmButton
 @onready var cancel_button: Button = %CancelButton
 
 const HumanFaceScene := preload("res://scenes/humans/HumanFace.tscn")

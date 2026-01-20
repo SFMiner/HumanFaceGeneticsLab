@@ -17,7 +17,7 @@ extends Control
 @onready var hair_layer: Sprite2D = $Layers/Hair
 @onready var lash_left: Sprite2D = $Layers/LashL
 @onready var lash_right: Sprite2D = $Layers/LashR
-@onready var freckle_layer: ColorRect = $Layers/FreckleLayer
+@onready var freckle_layer: Sprite2D = $Layers/Freckles
 
 # ============================================================================
 # STATE
@@ -26,6 +26,9 @@ extends Control
 var _current_phenotype: Dictionary = {}
 var _cached_key: String = ""
 const TINT_DARKEN := 0.15
+const HAIR_TEX_STRAIGHT := preload("res://assets/face/hair_straight.png")
+const HAIR_TEX_WAVY := preload("res://assets/face/hair_wavy.png")
+const HAIR_TEX_CURLY := preload("res://assets/face/hair_curly.png")
 
 # ============================================================================
 # LIFECYCLE
@@ -48,6 +51,7 @@ func _setup_default_appearance() -> void:
 	if iris_right:
 		iris_right.modulate = _tint(Color(0.4, 0.3, 0.2))
 	if hair_layer:
+		hair_layer.texture = HAIR_TEX_STRAIGHT
 		hair_layer.modulate = _tint(Color(0.2, 0.15, 0.1))  # Default dark hair
 	if lash_left:
 		lash_left.modulate = Color(1, 1, 1, 1)
@@ -117,7 +121,7 @@ func _apply_skin_tone(skin_tone: String) -> void:
 		freckle_layer.visible = has_freckles
 		if has_freckles:
 			# Freckle color slightly darker than skin
-			freckle_layer.color = color.darkened(0.2)
+			freckle_layer.modulate = _tint(color.darkened(0.2))
 
 
 func _apply_hair_color(hair_color: String) -> void:
@@ -135,14 +139,13 @@ func _apply_hair_texture(hair_texture: String) -> void:
 	
 	match hair_texture:
 		"straight":
-			# Default shape
-			pass
+			hair_layer.texture = HAIR_TEX_STRAIGHT
 		"wavy":
-			# Slightly different shape (placeholder effect)
-			pass
+			hair_layer.texture = HAIR_TEX_WAVY
 		"curly":
-			# Different shape (placeholder effect)
-			pass
+			hair_layer.texture = HAIR_TEX_CURLY
+		_:
+			hair_layer.texture = HAIR_TEX_STRAIGHT
 
 
 func _apply_lash_tint(phenotype: Dictionary) -> void:

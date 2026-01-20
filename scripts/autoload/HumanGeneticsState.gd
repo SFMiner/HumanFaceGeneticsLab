@@ -581,6 +581,19 @@ func normalize_genotype(genotype: Dictionary) -> Dictionary:
 	return normalized
 
 
+## Normalize genotype and preserve visible phenotype hints for legacy humans
+func normalize_genotype_with_phenotype(genotype: Dictionary, phenotype: Dictionary) -> Dictionary:
+	var normalized := normalize_genotype(genotype)
+	
+	# Preserve freckles from older saves that lacked MC1R in the genotype.
+	if not genotype.has("MC1R"):
+		var skin_tone: String = phenotype.get("skin_tone", "")
+		if skin_tone.ends_with("_freckled"):
+			normalized["MC1R"] = ["R", "r"]
+	
+	return normalized
+
+
 ## Apply convenience genotypes for missing genes
 func apply_convenience_genotypes(genotype: Dictionary) -> Dictionary:
 	var result := genotype.duplicate(true)
@@ -593,15 +606,11 @@ func apply_convenience_genotypes(genotype: Dictionary) -> Dictionary:
 ## Generate a random genotype for the current level
 func generate_random_genotype() -> Dictionary:
 	var genotype: Dictionary = {}
-	var active_genes := get_active_genes()
-	
 	for gene_id in GENE_LIBRARY.keys():
-		if gene_id in active_genes:
-			# Randomize active genes
-			genotype[gene_id] = _generate_random_allele_pair(gene_id)
+		if gene_id == "ALB" and not is_albinism_allowed():
+			genotype[gene_id] = ["N", "N"]
 		else:
-			# Use convenience genotypes for inactive genes
-			genotype[gene_id] = CONVENIENCE_GENOTYPES[gene_id].duplicate()
+			genotype[gene_id] = _generate_random_allele_pair(gene_id)
 	
 	return genotype
 
@@ -636,10 +645,7 @@ func generate_random_human() -> int:
 
 ## Get a gene pair that respects current level activity
 func _get_gene_pair_for_level(genotype: Dictionary, gene_id: String, active_genes: Array) -> Array:
-	if gene_id in active_genes:
-		return genotype.get(gene_id, CONVENIENCE_GENOTYPES.get(gene_id, ["A", "a"]))
-	# Inactive genes default to neutralized alleles to avoid unintended effects.
-	return NEUTRAL_GENOTYPES.get(gene_id, CONVENIENCE_GENOTYPES.get(gene_id, ["A", "a"]))
+	return genotype.get(gene_id, CONVENIENCE_GENOTYPES.get(gene_id, ["A", "a"]))
 
 
 ## Get ALB pair with optional albinism constraints
@@ -659,6 +665,9 @@ func _get_tyrosinase_pair_for_level(genotype: Dictionary, active_genes: Array) -
 ## Sanitize a genotype to respect current level constraints
 func sanitize_genotype_for_level(genotype: Dictionary) -> Dictionary:
 	var result := genotype.duplicate(true)
+	if not is_albinism_allowed():
+		if result.has("ALB"):
+			result["ALB"] = ["N", "N"]
 	return result
 
 

@@ -1,0 +1,72 @@
+{
+	"startup_prompt": {
+		"text": "Skip Tutorial?",
+		"remember_label": "Remember this",
+		"yes_label": "Yes",
+		"no_label": "No"
+	},
+	"steps": [
+		{
+			"id": 1,
+			"anchor": "generate_button",
+			"position": "above",
+			"text": "Press here to generate \na new human.",
+			"anchor_x_factor": 0.5,
+			"anchor_y_factor": 0.0,
+			"offset_x": 0,
+			"offset_y": 48
+		},
+		{
+			"id": 2,
+			"anchor": "parent_a_slot",
+			"position": "right",
+			"text": "<- Drag the card to\nthe Parent slot ->\nto select them\nfor recombination.",
+			"anchor_x_factor": 1.0,
+			"anchor_y_factor": 0.7,
+			"offset_x": -300,
+			"offset_y": -110
+		},
+		{
+			"id": 3,
+			"anchor": "parent_a_slot",
+			"position": "right",
+			"text": "Click again to generate a new human to drag into the second Parent slot. →\n\nYou can also use the same parent in both slots: the offspring will still recombine, and not be identical!",
+			"anchor_x_factor": 1.0,
+			"anchor_y_factor": 0.7,
+			"offset_x": -205,
+			"offset_y": -10
+		},
+		{
+			"id": 4,
+			"anchor": "generate_button",
+			"position": "above",
+			"text": "You can drag alleles\nfrom the Allele Bank ->\nto the parent slots to modify the parent genotypes!",
+			"anchor_x_factor": 1.0,
+			"anchor_y_factor": 0.0,
+			"offset_x": -90,
+			"offset_y": 30,
+			"show_not_now": true
+		},
+		{
+			"id": 5,
+			"anchor": "parent_b_slot",
+			"position": "right",
+			"text": "The Punnett Square  ->\nshows the likelihood of different phenotypes.\n\nChoose which genes to show by clicking the checkbox in the Allele Bank.\n\nPress the \"Recombine\" button to generate an offspring!",
+			"anchor_x_factor": 1.0,
+			"anchor_y_factor": 0.7,
+			"offset_x": -180,
+			"offset_y": -10
+		},
+		{
+			"id": 6,
+			"anchor": "offspring_preview",
+			"position": "above",
+			"text": "Press the \"Save to Library\" and give them a name, or hit recombine again for a different offspring!",
+			"anchor_x_factor": 0.5,
+			"anchor_y_factor": 0.0,
+			"offset_x": 0,
+			"offset_y": 10,
+			"show_close": true
+		}
+	]
+}

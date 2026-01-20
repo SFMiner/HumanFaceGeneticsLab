@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://xv118j8brm34"]
+[gd_scene load_steps=12 format=3 uid="uid://xv118j8brm34"]
 
 [ext_resource type="Script" uid="uid://bfb4hwj02xmp0" path="res://scripts/main/GeneticsLab.gd" id="1_main"]
 [ext_resource type="Theme" uid="uid://djfpgda2gfca1" path="res://assets/themes/future_tech.theme.tres" id="1_wk2ji"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bv3jcvn3xh1cf" path="res://scenes/ui/RecombinationArea.tscn" id="3_breeding"]
 [ext_resource type="PackedScene" uid="uid://cvr0adchx0ul0" path="res://scenes/ui/TeacherModePanel.tscn" id="4_teacher"]
 [ext_resource type="PackedScene" uid="uid://cfuu18w8a65w4" path="res://scenes/humans/HumanFace.tscn" id="5_face"]
+[ext_resource type="PackedScene" uid="uid://ckeq5ck62vje7" path="res://scenes/ui/tutorial_panel.tscn" id="6_tutorial"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
 content_margin_left = 10.0
@@ -89,6 +90,13 @@ layout_mode = 2
 layout_mode = 2
 text = "Teacher Mode"
 
+[node name="Sep3" type="VSeparator" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+
+[node name="AdminButton" type="Button" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+text = "Admin"
+
 [node name="TeacherModeBanner" type="PanelContainer" parent="MainVBox/TopBar/VBox"]
 visible = false
 layout_mode = 2
@@ -128,7 +136,6 @@ offset_right = 450.0
 [node name="FacePreviewPopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
 size = Vector2i(396, 690)
-visible = true
 content_scale_factor = 3.0
 
 [node name="PanelContainer" type="PanelContainer" parent="FacePreviewPopup"]
@@ -159,6 +166,50 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 10
 text = "Close"
+
+[node name="TutorialPanel" parent="." instance=ExtResource("6_tutorial")]
+visible = false
+top_level = true
+z_index = 100
+layout_mode = 0
+offset_right = 280.0
+
+[node name="AdminPinPopup" type="PopupPanel" parent="."]
+size = Vector2i(360, 160)
+
+[node name="PanelContainer" type="PanelContainer" parent="AdminPinPopup"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 356.0
+offset_bottom = 156.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBox" type="VBoxContainer" parent="AdminPinPopup/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PromptLabel" type="Label" parent="AdminPinPopup/PanelContainer/VBox"]
+layout_mode = 2
+text = "Enter admin PIN:"
+
+[node name="PinInput" type="LineEdit" parent="AdminPinPopup/PanelContainer/VBox"]
+layout_mode = 2
+placeholder_text = "PIN"
+secret = true
+
+[node name="ButtonRow" type="HBoxContainer" parent="AdminPinPopup/PanelContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="UnlockButton" type="Button" parent="AdminPinPopup/PanelContainer/VBox/ButtonRow"]
+layout_mode = 2
+text = "Unlock"
+
+[node name="CancelButton" type="Button" parent="AdminPinPopup/PanelContainer/VBox/ButtonRow"]
+layout_mode = 2
+text = "Cancel"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false

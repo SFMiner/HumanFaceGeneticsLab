@@ -11,6 +11,8 @@ extends PanelContainer
 
 signal offspring_created(human_id: int)
 signal parent_selected(slot: String, human_id: int)
+signal allele_dropped(slot: String, gene_id: String)
+signal recombine_pressed()
 
 # ============================================================================
 # NODE REFERENCES
@@ -33,6 +35,7 @@ var _parent_a_genotype: Dictionary = {}  # Working genotype (may differ from sav
 var _parent_b_genotype: Dictionary = {}
 var _current_offspring_id: int = -1
 var _parents_locked: bool = false
+var _punnett_gene_filter: Array = []
 
 # ============================================================================
 # LIFECYCLE
@@ -49,11 +52,13 @@ func _setup_connections() -> void:
 		parent_a_slot.human_dropped.connect(_on_parent_a_dropped)
 		parent_a_slot.genotype_changed.connect(_on_parent_a_genotype_changed)
 		parent_a_slot.cleared.connect(_on_parent_a_cleared)
+		parent_a_slot.allele_dropped.connect(_on_parent_a_allele_dropped)
 	
 	if parent_b_slot:
 		parent_b_slot.human_dropped.connect(_on_parent_b_dropped)
 		parent_b_slot.genotype_changed.connect(_on_parent_b_genotype_changed)
 		parent_b_slot.cleared.connect(_on_parent_b_cleared)
+		parent_b_slot.allele_dropped.connect(_on_parent_b_allele_dropped)
 	
 	# Recombine button
 	recombine_button.pressed.connect(_on_recombine_pressed)
@@ -64,6 +69,9 @@ func _setup_connections() -> void:
 	
 	# Teacher mode changes
 	TeacherModeState.constraints_changed.connect(_on_teacher_constraints_changed)
+	
+	if allele_palette and allele_palette.has_signal("punnett_genes_changed"):
+		allele_palette.punnett_genes_changed.connect(_on_punnett_genes_changed)
 
 
 # ============================================================================
@@ -81,9 +89,17 @@ func set_parent_from_library(human_id: int, slot: String) -> void:
 		return
 	
 	if slot == "A" or slot == "parent_a":
-		_set_parent_a(human_id, human.get("genotype", {}))
+		var genotype := HumanGeneticsState.normalize_genotype_with_phenotype(
+			human.get("genotype", {}),
+			human.get("phenotype", {})
+		)
+		_set_parent_a(human_id, genotype)
 	elif slot == "B" or slot == "parent_b":
-		_set_parent_b(human_id, human.get("genotype", {}))
+		var genotype := HumanGeneticsState.normalize_genotype_with_phenotype(
+			human.get("genotype", {}),
+			human.get("phenotype", {})
+		)
+		_set_parent_b(human_id, genotype)
 
 
 ## Refresh the entire breeding area
@@ -175,7 +191,11 @@ func _on_parent_a_dropped(human_id: int) -> void:
 	
 	var human := HumanGeneticsState.get_human(human_id)
 	if not human.is_empty():
-		_set_parent_a(human_id, human.get("genotype", {}))
+		var genotype := HumanGeneticsState.normalize_genotype_with_phenotype(
+			human.get("genotype", {}),
+			human.get("phenotype", {})
+		)
+		_set_parent_a(human_id, genotype)
 
 
 func _on_parent_b_dropped(human_id: int) -> void:
@@ -185,7 +205,11 @@ func _on_parent_b_dropped(human_id: int) -> void:
 	
 	var human := HumanGeneticsState.get_human(human_id)
 	if not human.is_empty():
-		_set_parent_b(human_id, human.get("genotype", {}))
+		var genotype := HumanGeneticsState.normalize_genotype_with_phenotype(
+			human.get("genotype", {}),
+			human.get("phenotype", {})
+		)
+		_set_parent_b(human_id, genotype)
 
 
 func _on_parent_a_genotype_changed(new_genotype: Dictionary) -> void:
@@ -201,6 +225,14 @@ func _on_parent_b_genotype_changed(new_genotype: Dictionary) -> void:
 	if _parent_b_id > 0:
 		_parent_b_id = -1
 	_on_parents_changed()
+
+
+func _on_parent_a_allele_dropped(gene_id: String) -> void:
+	allele_dropped.emit("A", gene_id)
+
+
+func _on_parent_b_allele_dropped(gene_id: String) -> void:
+	allele_dropped.emit("B", gene_id)
 
 
 func _on_parent_a_cleared() -> void:
@@ -230,10 +262,23 @@ func _update_punnett_square() -> void:
 	
 	# Get active genes for current level
 	var active_genes := HumanGeneticsState.get_active_genes()
+	var visible_genes: Array = []
+	for gene_id in active_genes:
+		if TeacherModeState.is_gene_visible(gene_id):
+			visible_genes.append(gene_id)
 	
 	# Limit genes based on max genes per cross
 	var max_genes := TeacherModeState.get_max_genes_per_cross()
-	var genes_to_show: Array = active_genes.slice(0, min(active_genes.size(), max_genes))
+	var genes_to_show: Array = []
+	if _punnett_gene_filter.size() > 0:
+		for gene_id in _punnett_gene_filter:
+			if gene_id in visible_genes:
+				genes_to_show.append(gene_id)
+	else:
+		genes_to_show = visible_genes.duplicate()
+	
+	if genes_to_show.size() > max_genes:
+		genes_to_show = genes_to_show.slice(0, max_genes)
 	
 	# Check display mode
 	var display_mode := TeacherModeState.get_punnett_display_mode()
@@ -257,6 +302,8 @@ func _update_punnett_square() -> void:
 func _on_recombine_pressed() -> void:
 	if _parent_a_genotype.is_empty() or _parent_b_genotype.is_empty():
 		return
+
+	recombine_pressed.emit()
 	
 	# Check recombination mode
 	var breeding_mode := TeacherModeState.get_breeding_mode()
@@ -325,6 +372,14 @@ func _build_offspring_data(selected_cell: int) -> Dictionary:
 			cell_index = HumanGeneticsState.rng.randi_range(0, punnett.size() - 1)
 	
 	var genotype: Dictionary = punnett[cell_index]
+	for gene_id in HumanGeneticsState.GENE_LIBRARY.keys():
+		if gene_id in active_genes:
+			continue
+		var source := _parent_a_genotype if HumanGeneticsState.rng.randf() < 0.5 else _parent_b_genotype
+		if source.has(gene_id):
+			genotype[gene_id] = source[gene_id].duplicate()
+		else:
+			genotype[gene_id] = HumanGeneticsState.CONVENIENCE_GENOTYPES.get(gene_id, ["A", "a"])
 	genotype = HumanGeneticsState.sanitize_genotype_for_level(genotype)
 	var phenotype: Dictionary = HumanGeneticsState.calculate_phenotype(genotype)
 	
@@ -401,6 +456,11 @@ func _show_probability_preview() -> void:
 func _on_offspring_saved(human_id: int) -> void:
 	# Offspring was saved to library, notify parent
 	offspring_created.emit(human_id)
+
+
+func _on_punnett_genes_changed(selected_genes: Array) -> void:
+	_punnett_gene_filter = selected_genes.duplicate()
+	_update_punnett_square()
 
 
 # ============================================================================

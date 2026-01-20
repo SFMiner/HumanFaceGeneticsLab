@@ -12,6 +12,7 @@ extends PanelContainer
 signal human_dropped(human_id: int)
 signal genotype_changed(new_genotype: Dictionary)
 signal cleared()
+signal allele_dropped(gene_id: String)
 
 # ============================================================================
 # NODE REFERENCES
@@ -278,6 +279,7 @@ func _handle_allele_drop(data: Dictionary) -> void:
 	
 	_update_display()
 	genotype_changed.emit(_current_genotype)
+	allele_dropped.emit(gene_id)
 
 
 func _notification(what: int) -> void:

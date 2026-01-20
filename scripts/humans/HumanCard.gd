@@ -22,8 +22,8 @@ signal favorite_toggled(human_id: int)
 @onready var face_display: Control = $VBox/FaceContainer/FaceDisplay
 @onready var name_label: Label = $VBox/NameLabel
 @onready var traits_label: Label = $VBox/TraitsLabel
-@onready var favorite_button: Button = $VBox/ButtonRow/FavoriteButton
-@onready var delete_button: Button = $VBox/ButtonRow/DeleteButton
+@onready var favorite_button: TextureButton = $VBox/ButtonRow/FavoriteButton
+@onready var delete_button: TextureButton = $VBox/ButtonRow/DeleteButton
 @onready var generation_label: Label = $VBox/GenerationLabel
 @onready var root_vbox: VBoxContainer = $VBox
 @onready var face_container: Control = $VBox/FaceContainer
@@ -34,7 +34,10 @@ signal favorite_toggled(human_id: int)
 
 var _human_id: int = -1
 var _human_data: Dictionary = {}
+var _display_phenotype: Dictionary = {}
 
+var no_heart : Texture2D = preload("res://assets/textures/no-heart.png")
+var heart : Texture2D = preload("res://assets/textures/heart.png")
 # ============================================================================
 # LIFECYCLE
 # ============================================================================
@@ -76,13 +79,16 @@ func _configure_drag_passthrough() -> void:
 func setup(human_data: Dictionary) -> void:
 	_human_data = human_data
 	_human_id = human_data.get("id", -1)
-	var genotype := HumanGeneticsState.normalize_genotype(human_data.get("genotype", {}))
+	var genotype := HumanGeneticsState.normalize_genotype_with_phenotype(
+		human_data.get("genotype", {}),
+		human_data.get("phenotype", {})
+	)
 	# Recalculate phenotype with current level rules for consistent visuals.
-	var phenotype := HumanGeneticsState.calculate_phenotype(genotype)
+	_display_phenotype = HumanGeneticsState.calculate_phenotype(genotype)
 	
 	# Render face
 	if face_display:
-		face_display.render(phenotype)
+		face_display.render(_display_phenotype)
 	
 	# Set name
 	if name_label:
@@ -90,7 +96,7 @@ func setup(human_data: Dictionary) -> void:
 	
 	# Set traits (visible traits based on level)
 	if traits_label:
-		traits_label.text = _format_traits(phenotype)
+		traits_label.text = _format_traits(_display_phenotype)
 	
 	# Set generation
 	if generation_label:
@@ -123,8 +129,8 @@ func _update_favorite_button() -> void:
 		return
 	
 	var is_fav := HumanGeneticsState.is_favorite(_human_id)
-	favorite_button.text = "❤" if is_fav else "♡"
-	favorite_button.modulate = Color.RED if is_fav else Color.WHITE
+	favorite_button.texture_normal = heart if is_fav else no_heart
+#	favorite_button.modulate = Color.RED if is_fav else Color.WHITE
 
 
 # ============================================================================
@@ -207,7 +213,7 @@ func _create_drag_preview() -> Control:
 	vbox.add_child(label)
 	
 	var traits := Label.new()
-	traits.text = _format_traits(_human_data.get("phenotype", {}))
+	traits.text = _format_traits(_display_phenotype)
 	traits.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	traits.add_theme_font_size_override("font_size", 10)
 	vbox.add_child(traits)

@@ -7,7 +7,7 @@
 			"active_genes": ["TYR", "OCA2", "HERC2"],
 			"allow_albinism": false,
 			"traits_displayed": ["eye_color"],
-			"max_punnett_genes": 2,
+			"max_punnett_genes": 3,
 			"starter_humans": [
 				{
 					"genotype": {"TYR": ["A","A"], "OCA2": ["B","B"], "HERC2": ["G","g"]},
@@ -25,7 +25,7 @@
 			"description": "Add TYRP1 for intensity variation",
 			"active_genes": ["TYR", "OCA2", "HERC2", "TYRP1"],
 			"traits_displayed": ["eye_color"],
-			"max_punnett_genes": 2,
+			"max_punnett_genes": 3,
 			"starter_humans": [
 				{
 					"genotype": {"TYR": ["A","a"], "OCA2": ["B","b"], "HERC2": ["G","g"], "TYRP1": ["H","h"]},
@@ -43,7 +43,7 @@
 			"description": "Introduce skin pigmentation genes",
 			"active_genes": ["TYR", "OCA2", "SLC24A5", "SLC45A2"],
 			"traits_displayed": ["eye_color", "skin_tone"],
-			"max_punnett_genes": 2,
+			"max_punnett_genes": 3,
 			"starter_humans": [
 				{
 					"genotype": {"TYR": ["A","A"], "OCA2": ["B","B"], "SLC24A5": ["D","D"], "SLC45A2": ["E","E"]},
@@ -61,7 +61,7 @@
 			"description": "Add red hair gene (MC1R) and hair darkness (TYRP1)",
 			"active_genes": ["TYR", "OCA2", "TYRP1", "MC1R"],
 			"traits_displayed": ["eye_color", "hair_color"],
-			"max_punnett_genes": 2,
+			"max_punnett_genes": 3,
 			"starter_humans": [
 				{
 					"genotype": {"TYR": ["A","A"], "OCA2": ["B","B"], "TYRP1": ["H","H"], "MC1R": ["r","r"]},
@@ -79,7 +79,7 @@
 			"description": "All traits with hair texture",
 			"active_genes": ["TYR", "ALB", "OCA2", "HERC2", "TYRP1", "SLC24A5", "SLC45A2", "MC1R", "TCHH"],
 			"traits_displayed": ["eye_color", "skin_tone", "hair_color", "hair_texture"],
-			"max_punnett_genes": 2,
+			"max_punnett_genes": 3,
 			"starter_humans": [
 				{
 					"genotype": {"TYR": ["A","A"], "OCA2": ["B","b"], "HERC2": ["G","g"], "TYRP1": ["H","h"], "SLC24A5": ["D","d"], "SLC45A2": ["E","e"], "MC1R": ["r","r"], "TCHH": ["C","C"]},

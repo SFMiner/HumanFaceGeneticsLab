@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cfur2ov8a65w4"]
+[gd_scene load_steps=6 format=3 uid="uid://cfur2ov8a65w4"]
 
 [ext_resource type="Script" uid="uid://bujunaxk0jdji" path="res://scripts/humans/HumanCard.gd" id="1_card"]
 [ext_resource type="PackedScene" uid="uid://cfuu18w8a65w4" path="res://scenes/humans/HumanFace.tscn" id="2_face"]
+[ext_resource type="Texture2D" uid="uid://byifcx6yawpwx" path="res://assets/textures/heart.png" id="3_si8b1"]
+[ext_resource type="Texture2D" uid="uid://ciqvbpkjhgwb0" path="res://assets/textures/trash.png" id="4_ovih6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
 content_margin_left = 8.0
@@ -58,16 +60,16 @@ horizontal_alignment = 1
 layout_mode = 2
 alignment = 1
 
-[node name="FavoriteButton" type="Button" parent="VBox/ButtonRow"]
+[node name="FavoriteButton" type="TextureButton" parent="VBox/ButtonRow"]
 custom_minimum_size = Vector2(30, 24)
 layout_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "♡"
-flat = true
+texture_normal = ExtResource("3_si8b1")
 
-[node name="DeleteButton" type="Button" parent="VBox/ButtonRow"]
+[node name="Container" type="Container" parent="VBox/ButtonRow"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="DeleteButton" type="TextureButton" parent="VBox/ButtonRow"]
 custom_minimum_size = Vector2(30, 24)
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
-text = "🗑"
-flat = true
+texture_normal = ExtResource("4_ovih6")

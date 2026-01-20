@@ -12,6 +12,7 @@ extends PanelContainer
 signal human_selected_for_parent(human_id: int, slot: String)
 signal human_card_clicked(human_id: int)
 signal face_clicked(human_id: int)
+signal generate_pressed()
 
 # ============================================================================
 # NODE REFERENCES
@@ -187,6 +188,7 @@ func _on_filter_changed(index: int) -> void:
 
 
 func _on_generate_pressed() -> void:
+	generate_pressed.emit()
 	if TeacherModeState.is_generation_locked():
 		# Show feedback that generation is locked
 		generate_button.modulate = Color.RED

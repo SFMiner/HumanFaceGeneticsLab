@@ -18,6 +18,7 @@ signal cell_clicked(index: int, genotype: Dictionary)
 @onready var grid_container: GridContainer = $VBox/GridContainer
 @onready var empty_label: Label = $VBox/MessageLabel
 @onready var ratios_label: Label = $VBox/RatioPanel/RatioVBox/RatioTitle
+@onready var mode_label: Label = $VBox/Header/ModeLabel
 
 # ============================================================================
 # CONSTANTS
@@ -25,6 +26,9 @@ signal cell_clicked(index: int, genotype: Dictionary)
 
 const CELL_SIZE := Vector2(60, 60)
 const CELL_SIZE_SMALL := Vector2(45, 45)
+const CELL_SIZE_TINY := Vector2(38, 38)
+const HEADER_SIZE := Vector2(50, 25)
+const HEADER_SIZE_SMALL := Vector2(40, 20)
 
 # ============================================================================
 # STATE
@@ -50,6 +54,8 @@ func clear() -> void:
 		empty_label.text = "Select parents to show\nPunnett square"
 	if ratios_label:
 		ratios_label.visible = false
+	if mode_label:
+		mode_label.text = "(--)"
 
 
 ## Display full Punnett square
@@ -66,6 +72,8 @@ func display_full(genotype_a: Dictionary, genotype_b: Dictionary, genes: Array) 
 	# Build gametes
 	var gametes_a := HumanGeneticsState.build_gametes(genotype_a, genes)
 	var gametes_b := HumanGeneticsState.build_gametes(genotype_b, genes)
+	if mode_label:
+		mode_label.text = "(%dx%d)" % [gametes_a.size(), gametes_b.size()]
 	
 	_build_grid(gametes_a, gametes_b, genes)
 
@@ -82,6 +90,8 @@ func display_ratios(genotype_a: Dictionary, genotype_b: Dictionary, genes: Array
 		empty_label.visible = false
 	if ratios_label:
 		ratios_label.visible = true
+	if mode_label:
+		mode_label.text = "(Ratios)"
 	
 	# Calculate phenotype ratios
 	var ratios := _calculate_phenotype_ratios(genotype_a, genotype_b, genes)
@@ -117,14 +127,17 @@ func _build_grid(gametes_a: Array, gametes_b: Array, genes: Array) -> void:
 	grid_container.columns = grid_size + 1  # +1 for row headers
 	
 	var cell_size := CELL_SIZE if grid_size <= 4 else CELL_SIZE_SMALL
+	if grid_size >= 8:
+		cell_size = CELL_SIZE_TINY
+	var header_size := HEADER_SIZE if grid_size < 8 else HEADER_SIZE_SMALL
 	var low_spec := TeacherModeState.is_low_spec_mode()
 	
 	# Header row (empty corner + gametes_a)
-	var corner := _create_header_cell("")
+	var corner := _create_header_cell("", header_size)
 	grid_container.add_child(corner)
 	
 	for gamete in gametes_a:
-		var header := _create_header_cell(_format_gamete(gamete))
+		var header := _create_header_cell(_format_gamete(gamete), header_size)
 		grid_container.add_child(header)
 	
 	# Data rows
@@ -133,7 +146,7 @@ func _build_grid(gametes_a: Array, gametes_b: Array, genes: Array) -> void:
 	
 	for gamete_b in gametes_b:
 		# Row header
-		var row_header := _create_header_cell(_format_gamete(gamete_b))
+		var row_header := _create_header_cell(_format_gamete(gamete_b), header_size)
 		grid_container.add_child(row_header)
 		
 		# Data cells
@@ -147,9 +160,9 @@ func _build_grid(gametes_a: Array, gametes_b: Array, genes: Array) -> void:
 			cell_index += 1
 
 
-func _create_header_cell(text: String) -> Control:
+func _create_header_cell(text: String, header_size: Vector2) -> Control:
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(50, 25)
+	panel.custom_minimum_size = header_size
 	
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0.25, 0.27, 0.3)
