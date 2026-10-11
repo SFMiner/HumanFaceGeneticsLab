@@ -26,6 +26,7 @@ signal teacher_mode_requested()
 @onready var footer_disclaimer: Label = $MainVBox/FooterDisclaimer
 @onready var teacher_mode_panel: Control = $TeacherModePanel
 @onready var admin_button: Button = $MainVBox/TopBar/VBox/HBox/AdminButton
+@onready var manual_button: Button = $MainVBox/TopBar/VBox/HBox/ManualButton
 @onready var face_preview_popup: PopupPanel = $FacePreviewPopup
 #@onready var face_preview_name: Label = $FacePreviewPopup/PanelContainer/VBoxContainer/NameLabel
 @onready var face_preview_face: Control = $FacePreviewPopup/PanelContainer/VBoxContainer/FacePreviewContainer/FacePreview
@@ -35,6 +36,9 @@ signal teacher_mode_requested()
 @onready var admin_pin_input: LineEdit = $AdminPinPopup/PanelContainer/VBox/PinInput
 @onready var admin_unlock_button: Button = $AdminPinPopup/PanelContainer/VBox/ButtonRow/UnlockButton
 @onready var admin_cancel_button: Button = $AdminPinPopup/PanelContainer/VBox/ButtonRow/CancelButton
+@onready var manual_popup: PopupPanel = $ManualPopup
+@onready var manual_close_button: Button = $ManualPopup/PanelContainer/VBox/Header/CloseButton
+@onready var manual_text: RichTextLabel = $ManualPopup/PanelContainer/VBox/Scroll/ManualText
 
 # ============================================================================
 # STATE
@@ -52,6 +56,7 @@ var _admin_enabled: bool = false
 const TUTORIAL_STATE_PATH := "user://tutorial_state.json"
 const ADMIN_HASH := "#admin"
 const ADMIN_PIN := "1234"
+const MANUAL_PATH := "res://docs/MANUAL.md"
 
 # ============================================================================
 # LIFECYCLE
@@ -90,6 +95,11 @@ func _setup_connections() -> void:
 		admin_cancel_button.pressed.connect(_on_admin_cancel_pressed)
 	if admin_pin_input:
 		admin_pin_input.text_submitted.connect(_on_admin_pin_submitted)
+	
+	if manual_button:
+		manual_button.pressed.connect(_on_manual_button_pressed)
+	if manual_close_button:
+		manual_close_button.pressed.connect(_on_manual_close_pressed)
 	
 	# Settings button
 	settings_button.pressed.connect(_on_settings_button_pressed)
@@ -278,6 +288,32 @@ func _try_unlock_admin() -> void:
 		admin_pin_input.text = ""
 
 
+func _load_manual_text() -> String:
+	var file := FileAccess.open(MANUAL_PATH, FileAccess.READ)
+	if not file:
+		return "Manual not found."
+	var text := file.get_as_text()
+	file.close()
+	return text
+
+
+func _format_manual_text(source: String) -> String:
+	var lines := source.split("\n")
+	var formatted: Array[String] = []
+	for line in lines:
+		if line.begins_with("# "):
+			formatted.append("[center][b][font_size=20]%s[/font_size][/b][/center]" % line.substr(2))
+		elif line.begins_with("## "):
+			formatted.append("[b][font_size=16]%s[/font_size][/b]" % line.substr(3))
+		elif line.begins_with("- "):
+			formatted.append("• " + line.substr(2))
+		elif line.strip_edges().is_empty():
+			formatted.append("")
+		else:
+			formatted.append(line)
+	return "\n".join(formatted)
+
+
 # ============================================================================
 # SETTINGS
 # ============================================================================
@@ -326,6 +362,18 @@ func _on_library_face_clicked(human_id: int) -> void:
 func _on_face_preview_close() -> void:
 	if face_preview_popup:
 		face_preview_popup.hide()
+
+
+func _on_manual_button_pressed() -> void:
+	if not manual_popup or not manual_text:
+		return
+	manual_text.text = _format_manual_text(_load_manual_text())
+	manual_popup.popup_centered(Vector2(760, 560))
+
+
+func _on_manual_close_pressed() -> void:
+	if manual_popup:
+		manual_popup.hide()
 
 
 # ============================================================================

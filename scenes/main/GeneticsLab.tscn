@@ -90,6 +90,13 @@ layout_mode = 2
 layout_mode = 2
 text = "Teacher Mode"
 
+[node name="SepManual" type="VSeparator" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+
+[node name="ManualButton" type="Button" parent="MainVBox/TopBar/VBox/HBox"]
+layout_mode = 2
+text = "Manual"
+
 [node name="Sep3" type="VSeparator" parent="MainVBox/TopBar/VBox/HBox"]
 layout_mode = 2
 
@@ -176,6 +183,43 @@ offset_right = 280.0
 
 [node name="AdminPinPopup" type="PopupPanel" parent="."]
 size = Vector2i(360, 160)
+
+[node name="ManualPopup" type="PopupPanel" parent="."]
+size = Vector2i(760, 560)
+visible = false
+
+[node name="PanelContainer" type="PanelContainer" parent="ManualPopup"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBox" type="VBoxContainer" parent="ManualPopup/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="HBoxContainer" parent="ManualPopup/PanelContainer/VBox"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="ManualPopup/PanelContainer/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Manual"
+
+[node name="CloseButton" type="Button" parent="ManualPopup/PanelContainer/VBox/Header"]
+layout_mode = 2
+text = "Close"
+
+[node name="Scroll" type="ScrollContainer" parent="ManualPopup/PanelContainer/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ManualText" type="RichTextLabel" parent="ManualPopup/PanelContainer/VBox/Scroll"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = false
+scroll_active = true
+scroll_following = false
 
 [node name="PanelContainer" type="PanelContainer" parent="AdminPinPopup"]
 offset_left = 4.0
