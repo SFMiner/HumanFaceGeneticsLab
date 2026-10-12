@@ -82,6 +82,13 @@ func _setup_keyboard() -> void:
 	add_child(keyboard)
 	keyboard.setup(self)
 	manual_text.focus_mode = Control.FOCUS_ALL
+	# Keep the manual's text an en dash's width in from the left and right edges
+	var font: Font = manual_text.get_theme_font("normal_font")
+	var dash: float = font.get_string_size("–", HORIZONTAL_ALIGNMENT_LEFT, -1, manual_text.get_theme_font_size("normal_font_size")).x
+	var inset := StyleBoxEmpty.new()
+	inset.content_margin_left = dash
+	inset.content_margin_right = dash
+	manual_text.add_theme_stylebox_override("normal", inset)
 	($ManualPopup/PanelContainer/VBox/Scroll as ScrollContainer).follow_focus = true
 
 
