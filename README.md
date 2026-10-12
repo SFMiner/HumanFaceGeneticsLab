@@ -107,15 +107,16 @@ Edit `HumanGeneticsState.gd` to adjust:
 Edit `data/teacher_mode_defaults.json` to set default constraints.
 
 ### Class settings link
-In a web build `TeacherModeState` reads the query string of the game's address, or of the play page around it
-(`/play/human-face-genetics?level=2&punnett=ratios`), applies the keys below for that visit only (never saved), and
+In a web build `TeacherModeState` reads the query string of the game's own address. The sims play page
+(`/play/human-face-genetics?level=2&punnett=ratios`) forwards only the keys declared for the game, with valid values, into the
+iframe address. The game applies the keys below for that visit only (never saved), and
 turns Teacher Mode on with a banner listing them. Unknown keys and bad values are ignored. The list is `LINK_KEYS` in
 `scripts/autoload/TeacherModeState.gd`; keep it, this table and the site's form in step.
 
 | Key | Values | Effect |
 |---|---|---|
 | `level` | 1-5 | Start on this level |
-| `locklevel` | 1 | Students can't change the level |
+| `locklevel` | 1 | Students can't change the level (flags are `1` or absent) |
 | `punnett` | full, ratios, single, hidden | Punnett square display |
 | `genotypes` | show, hide | `hide` removes genotypes from the parent slots and Punnett cells (the Allele Bank still names alleles) |
 | `results` | offspring, probabilities | `probabilities` shows the odds and makes no offspring |

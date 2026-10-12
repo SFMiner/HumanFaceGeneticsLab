@@ -89,10 +89,10 @@ func _ready() -> void:
 		apply_link_settings(_read_page_query())
 
 
-## The query string of the game's own address, or else of the play page around it (same origin on the sims site).
+## The query string of the game's own address. The sims play page forwards only the declared keys into the iframe
+## src, so the game never reads the page around it.
 func _read_page_query() -> String:
-	var js: String = "(function(){var q=window.location.search;if(!q){try{q=window.parent.location.search;}catch(e){q='';}}return q||'';})()"
-	var result: Variant = JavaScriptBridge.eval(js, true)
+	var result: Variant = JavaScriptBridge.eval("window.location.search", true)
 	return result if result is String else ""
 
 
