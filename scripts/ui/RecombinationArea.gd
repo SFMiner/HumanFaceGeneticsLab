@@ -70,6 +70,9 @@ func _setup_connections() -> void:
 	# Teacher mode changes
 	TeacherModeState.constraints_changed.connect(_on_teacher_constraints_changed)
 	
+	if allele_palette and allele_palette.has_signal("assign_requested"):
+		allele_palette.assign_requested.connect(_on_palette_assign_requested)
+	
 	if allele_palette and allele_palette.has_signal("punnett_genes_changed"):
 		allele_palette.punnett_genes_changed.connect(_on_punnett_genes_changed)
 
@@ -225,6 +228,12 @@ func _on_parent_b_genotype_changed(new_genotype: Dictionary) -> void:
 	if _parent_b_id > 0:
 		_parent_b_id = -1
 	_on_parents_changed()
+
+
+func _on_palette_assign_requested(gene_id: String, alleles: Array, slot: String) -> void:
+	var target: Control = parent_a_slot if slot == "A" else parent_b_slot
+	if target:
+		target.apply_allele(gene_id, alleles)
 
 
 func _on_parent_a_allele_dropped(gene_id: String) -> void:

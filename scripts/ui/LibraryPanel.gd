@@ -48,6 +48,7 @@ func _ready() -> void:
 
 
 func _setup_connections() -> void:
+	($VBox/ScrollContainer as ScrollContainer).follow_focus = true
 	search_input.text_changed.connect(_on_search_changed)
 	filter_dropdown.item_selected.connect(_on_filter_changed)
 	generate_button.pressed.connect(_on_generate_pressed)
@@ -104,6 +105,7 @@ func _add_card(human_data: Dictionary) -> void:
 	card.clicked.connect(_on_card_clicked)
 	card.face_clicked.connect(_on_card_face_clicked)
 	card.drag_started.connect(_on_card_drag_started)
+	card.assign_requested.connect(_on_card_assign_requested)
 	card.delete_requested.connect(_on_card_delete_requested)
 	card.favorite_toggled.connect(_on_card_favorite_toggled)
 
@@ -206,6 +208,10 @@ func _on_card_clicked(human_id: int) -> void:
 
 func _on_card_face_clicked(human_id: int) -> void:
 	face_clicked.emit(human_id)
+
+
+func _on_card_assign_requested(human_id: int, slot: String) -> void:
+	human_selected_for_parent.emit(human_id, slot)
 
 
 func _on_card_drag_started(human_id: int) -> void:

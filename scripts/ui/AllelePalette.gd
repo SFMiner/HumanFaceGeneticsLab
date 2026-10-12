@@ -4,6 +4,7 @@ class_name AllelePalette
 ## Users drag chips from here to ParentSlots for genotype construction
 
 signal punnett_genes_changed(selected_genes: Array)
+signal assign_requested(gene_id: String, alleles: Array, slot: String)
 
 @onready var vbox: VBoxContainer = $ScrollContainer/VBox
 @onready var scroll_container: ScrollContainer = $ScrollContainer
@@ -18,6 +19,7 @@ func _ready() -> void:
 	HumanGeneticsState.level_changed.connect(_on_level_changed)
 	TeacherModeState.gene_visibility_changed.connect(_on_gene_visibility_changed)
 	
+	scroll_container.follow_focus = true
 	# Initial population
 	call_deferred("_populate_palette")
 
@@ -82,6 +84,7 @@ func _create_gene_section(gene_id: String, gene_info: Dictionary) -> VBoxContain
 		var chip: AlleleChip = AlleleChipScene.instantiate()
 		header_row.add_child(chip)
 		chip.setup(gene_id, alleles, true, false)  # Draggable, no remove button
+		chip.assign_requested.connect(assign_requested.emit)
 	
 	# Add separator
 	var separator := HSeparator.new()

@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://dibfqy2iekf0h" path="res://scripts/ui/LibraryPanel.gd" id="1_library"]
 
 [node name="LibraryPanel" type="PanelContainer"]
-custom_minimum_size = Vector2(280, 650)
+custom_minimum_size = Vector2(280, 300)
 offset_right = 280.0
 offset_bottom = 687.0
 theme = ExtResource("1_1m2hl")
@@ -37,7 +37,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBox"]
-custom_minimum_size = Vector2(0, 515)
+custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0

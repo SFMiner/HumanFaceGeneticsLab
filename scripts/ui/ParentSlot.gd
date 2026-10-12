@@ -53,6 +53,7 @@ func _ready() -> void:
 
 
 func _setup_connections() -> void:
+	($VBox/ScrollContainer as ScrollContainer).follow_focus = true
 	if clear_button:
 		clear_button.pressed.connect(_on_clear_pressed)
 
@@ -262,9 +263,13 @@ func _drop_data(_position: Vector2, data: Variant) -> void:
 
 
 func _handle_allele_drop(data: Dictionary) -> void:
-	var gene_id: String = data.get("gene_id", "")
-	var alleles: Array = data.get("alleles", [])
-	
+	apply_allele(data.get("gene_id", ""), data.get("alleles", []))
+
+
+## Puts an allele pair on this parent. The drop and the keyboard route (A / B on an Allele Bank chip) both use it.
+func apply_allele(gene_id: String, alleles: Array) -> void:
+	if TeacherModeState.are_parents_locked() and has_human():
+		return
 	if gene_id.is_empty() or alleles.size() < 2:
 		return
 	

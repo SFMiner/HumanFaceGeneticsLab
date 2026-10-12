@@ -30,6 +30,21 @@ An educational genetics simulator for Godot 4.5 that teaches polygenic inheritan
 - Dynamic Punnett square visualization
 - Persistent human library with favorites and search
 
+## Feature checklist
+
+- [x] 8 genes, 4 traits, 5 progressive levels
+- [x] Library of humans, parent slots, allele chips, Punnett square, recombination, save to library
+- [x] Teacher Mode (admin-gated; in web builds add `#admin` to the URL, then use the Admin button and PIN)
+- [x] In-game Manual (`docs/MANUAL.md`, shipped in the web export)
+- [x] Keyboard: Tab / Shift+Tab through every control, yellow focus outline, A / B on a library card or Allele Bank chip fill Parent A / B (the keyboard route for the drag), Enter on a card enlarges the face
+- [x] Keyboard exit for the sims site: Escape closes the innermost open thing (popup, Teacher Mode panel, naming box, tutorial) then leaves; Tab past the last control and Shift+Tab before the first leave (`sims:leave-game`)
+- [x] No sound, no fast flashing (the tutorial box fades about once a second)
+- [x] Scales to small frames (`canvas_items` stretch, `expand` aspect); the Recombination Area scrolls when the frame is short
+- [x] Web export with the 2D + GUI template (`export_presets.cfg`, preset "Web", exports to `../exports/human-face-genetics/`)
+- [x] Headless tests: `GODOT=<godot 4.5 binary> ./tests/run_all_tests.sh` (keyboard + smoke)
+- [ ] Settings button (does nothing yet; prints a message)
+- [ ] Punnett cell colour is supplementary only (tooltip names the phenotype); no keyboard route to click a cell
+
 ## Getting Started
 
 1. Open the project in Godot 4.5+
@@ -91,7 +106,7 @@ Edit `data/teacher_mode_defaults.json` to set default constraints.
 ## Technical Requirements
 
 - Godot 4.5+
-- Desktop (1280×720 base resolution)
+- Desktop (1280×720 base resolution, scales down to a 640×360 frame)
 - Web export compatible
 
 ## Terminology

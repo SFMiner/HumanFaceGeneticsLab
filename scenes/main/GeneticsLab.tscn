@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://djfpgda2gfca1" path="res://assets/themes/future_tech.theme.tres" id="1_wk2ji"]
 [ext_resource type="FontVariation" uid="uid://u3aqw7ttp1gx" path="res://assets/fonts/default_font.tres" id="2_g5xqc"]
 [ext_resource type="PackedScene" uid="uid://clibpan001scn" path="res://scenes/ui/LibraryPanel.tscn" id="2_library"]
-[ext_resource type="FontFile" uid="uid://bsfuht6qufe6c" path="res://assets/fonts/header_font.ttf" id="3_6hym4"]
+[ext_resource type="FontVariation" path="res://assets/fonts/header_font_web.tres" id="3_6hym4"]
 [ext_resource type="PackedScene" uid="uid://bv3jcvn3xh1cf" path="res://scenes/ui/RecombinationArea.tscn" id="3_breeding"]
 [ext_resource type="PackedScene" uid="uid://cvr0adchx0ul0" path="res://scenes/ui/TeacherModePanel.tscn" id="4_teacher"]
 [ext_resource type="PackedScene" uid="uid://cfuu18w8a65w4" path="res://scenes/humans/HumanFace.tscn" id="5_face"]
@@ -41,9 +41,12 @@ layout_mode = 0
 color = Color(0.131403, 0.2105695, 0.4805858, 1)
 
 [node name="MainVBox" type="VBoxContainer" parent="."]
-layout_mode = 0
-offset_right = 1275.0
-offset_bottom = 639.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="TopBar" type="PanelContainer" parent="MainVBox"]
 custom_minimum_size = Vector2(0, 50)
@@ -125,6 +128,13 @@ layout_mode = 2
 [node name="RecombinationArea" parent="MainVBox/MainHBox" instance=ExtResource("3_breeding")]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="KeyHint" type="Label" parent="MainVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
+theme_override_font_sizes/font_size = 11
+text = "Keyboard: Tab / Shift+Tab move. On a library card press A or B to make it Parent A or B, Enter to enlarge it. On an allele in the Allele Bank press A or B to apply it. Esc closes what is open, then leaves."
+autowrap_mode = 2
 
 [node name="FooterDisclaimer" type="Label" parent="MainVBox"]
 visible = false
@@ -215,7 +225,10 @@ size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
 [node name="ManualText" type="RichTextLabel" parent="ManualPopup/PanelContainer/VBox/Scroll"]
+custom_minimum_size = Vector2(700, 400)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 bbcode_enabled = true
 fit_content = false
 scroll_active = true

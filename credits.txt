@@ -1,0 +1,11 @@
+Human Face Genetics Lab - credits
+
+Code, face art (assets/face), button icons (assets/textures) and theme: Sean Miner, MIT licence.
+
+Header font (assets/fonts/header_font.ttf): "DLE Digital", named "Work of Digitality" inside the file.
+	By Daniel Lyons, 2015, made with FontStruct (http://fontstruct.com).
+	Licence: Creative Commons Attribution-ShareAlike 3.0 (http://creativecommons.org/licenses/by-sa/3.0/),
+	as stated in the font file. Listing: https://online-fonts.com/fonts/dle-digital
+
+Body font (assets/fonts/default_font.ttf): Roboto by Google (font data copyright Google 2011).
+	Licence: Apache License 2.0 (this version's usual licence; the file itself does not name one).

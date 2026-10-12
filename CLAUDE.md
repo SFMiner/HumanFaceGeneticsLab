@@ -24,10 +24,16 @@ This file is the single copy of the project conventions; AGENTS.md only points h
 - JSON files in `data/` should remain stable in key ordering and use clear, descriptive keys.
 
 ## Testing Guidelines
-- No automated tests are present. Validate changes by running the main scene and exercising:
-  - Parent selection, recombination, and library refresh.
-  - Teacher Mode toggles, constraints, and disclaimer visibility.
-- If you add tests, document how to run them here and keep them isolated under a `tests/` folder.
+- Run `GODOT=C:/Users/seanm/Nextcloud2/Gamedev/Godot_v4.5-stable_win64.exe ./tests/run_all_tests.sh` (keyboard + smoke suites; it fails on any `SCRIPT ERROR` too). New `class_name`s need an editor scan first (the script does it), or `--script` runs fail to compile.
+- Tests write to the real `user://` library and tutorial state, so they remove what they add; keep it that way.
+- Also exercise by hand: parent selection, recombination, library refresh, Teacher Mode toggles, constraints, and disclaimer visibility.
+- Keep tests under `tests/`.
+
+## Keyboard & web export (sims.mr-miner.com)
+- Tab order and the keyboard exit live in `scripts/ui/KeyboardNav.gd`: it builds the Tab list from visible focusable controls in tree order (tutorial box first), so new controls join automatically. `GeneticsLab.close_topmost()` decides what Escape closes. `FocusRing.attach()` gives cards/TextureButtons their focus outline (theme `focus` style is yellow for the rest).
+- Anything done by drag needs an A / B key route (see `HumanCard.assign_requested`, `AlleleChip.assign_requested`).
+- Web export uses the 2D + GUI template (OptionButton, RichTextLabel, SpinBox); `docs/MANUAL.md` is shipped via `include_filter` because `.md` is not a resource. Loose images in the folder root (screenshots, `faces_level*.jpg`, a personal schedule) are excluded by `*.jpg`; move them out of the project when convenient.
+- Header text uses `assets/fonts/header_font_web.tres` (header font + fallback): the web text server draws a hex box for U+2006, which the plain header font lacks.
 
 ## Commit & Pull Request Guidelines
 - This workspace does not include Git history, so no existing commit convention can be inferred.

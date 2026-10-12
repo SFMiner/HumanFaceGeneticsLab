@@ -58,6 +58,9 @@ const ADMIN_HASH := "#admin"
 const ADMIN_PIN := "1234"
 const MANUAL_PATH := "res://docs/MANUAL.md"
 
+## Tab order, close_topmost() and the keyboard exit live in KeyboardNav (scripts/ui/KeyboardNav.gd).
+var keyboard: KeyboardNav = null
+
 # ============================================================================
 # LIFECYCLE
 # ============================================================================
@@ -74,7 +77,44 @@ func _ready() -> void:
 	
 	_setup_tutorial_anchors()
 	_load_tutorial_data()
+	_setup_keyboard()
 	call_deferred("_begin_tutorial_flow")
+
+
+func _setup_keyboard() -> void:
+	keyboard = KeyboardNav.new()
+	keyboard.name = "KeyboardNav"
+	add_child(keyboard)
+	keyboard.setup(self)
+	manual_text.focus_mode = Control.FOCUS_ALL
+	($ManualPopup/PanelContainer/VBox/Scroll as ScrollContainer).follow_focus = true
+
+
+## Controls that come first in Tab order while visible: the tutorial box, so a keyboard user meets it at once.
+func first_stops() -> Array:
+	return [tutorial_panel] if tutorial_panel != null else []
+
+
+func popup_open() -> bool:
+	return admin_pin_popup.visible or manual_popup.visible or face_preview_popup.visible
+
+
+## Escape: closes the innermost open thing and returns true; returns false when nothing is open.
+func close_topmost() -> bool:
+	for popup: Window in [admin_pin_popup, manual_popup, face_preview_popup]:
+		if popup.visible:
+			popup.hide()
+			return true
+	if _teacher_panel_visible:
+		_on_teacher_panel_close_requested()
+		return true
+	var offspring: Node = breeding_area.get_node("%OffspringPreview")
+	if offspring.has_method("cancel_naming") and offspring.cancel_naming():
+		return true
+	if tutorial_panel != null and tutorial_panel.visible:
+		_end_tutorial()
+		return true
+	return false
 
 
 func _setup_connections() -> void:
@@ -311,7 +351,16 @@ func _format_manual_text(source: String) -> String:
 			formatted.append("")
 		else:
 			formatted.append(line)
-	return "\n".join(formatted)
+	return _bold_markers("\n".join(formatted))
+
+
+## Turns markdown **bold** pairs into BBCode so the asterisks are not shown.
+func _bold_markers(text: String) -> String:
+	var parts: PackedStringArray = text.split("**")
+	var out: String = parts[0]
+	for i: int in range(1, parts.size()):
+		out += ("[b]" if i % 2 == 1 else "[/b]") + parts[i]
+	return out
 
 
 # ============================================================================
@@ -357,6 +406,7 @@ func _on_library_face_clicked(human_id: int) -> void:
 	
 	if face_preview_popup:
 		face_preview_popup.popup_centered(Vector2(360, 420))
+		face_preview_close.grab_focus()
 
 
 func _on_face_preview_close() -> void:
@@ -369,6 +419,7 @@ func _on_manual_button_pressed() -> void:
 		return
 	manual_text.text = _format_manual_text(_load_manual_text())
 	manual_popup.popup_centered(Vector2(760, 560))
+	manual_text.grab_focus()
 
 
 func _on_manual_close_pressed() -> void:
@@ -599,9 +650,6 @@ func _end_tutorial_if_on_step(step_id: int) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
-		# Ctrl+T: Toggle Teacher Mode panel
+		# Ctrl+T: Toggle Teacher Mode panel (Escape is handled by KeyboardNav)
 		if event.keycode == KEY_T and event.ctrl_pressed:
 			_on_teacher_mode_button_pressed()
-		# Escape: Close Teacher Mode panel
-		elif event.keycode == KEY_ESCAPE and _teacher_panel_visible:
-			_on_teacher_panel_close_requested()

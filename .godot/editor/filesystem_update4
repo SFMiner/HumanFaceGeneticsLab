@@ -1,8 +1,0 @@
-res://scenes/ui/OffspringPreview.tscn
-res://assets/themes/future_tech.theme.tres
-res://assets/fonts/default_font.tres
-res://data/tutorial.json
-res://scripts/ui/OffspringPreview.gd
-res://scenes/humans/HumanCard.tscn
-res://scripts/humans/HumanCard.gd
-res://scenes/main/GeneticsLab.tscn

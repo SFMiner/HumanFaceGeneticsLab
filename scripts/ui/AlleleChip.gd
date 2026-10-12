@@ -7,6 +7,8 @@ signal chip_removed(gene_id: String)
 signal chip_clicked(gene_id: String)
 signal allele_changed(gene_id: String, new_alleles: Array)
 signal allele_removed(gene_id: String)
+## Keyboard route for the drag from the Allele Bank: A / B apply this pair to Parent A / B.
+signal assign_requested(gene_id: String, alleles: Array, slot: String)
 
 @onready var hbox: HBoxContainer = $HBox
 @onready var gene_label: Label = $HBox/GeneLabel
@@ -35,6 +37,7 @@ func _ready() -> void:
 	
 	gui_input.connect(_on_gui_input)
 	_configure_input_passthrough()
+	_setup_keyboard()
 	_update_display()
 
 
@@ -48,6 +51,16 @@ func setup(p_gene_id: String, p_alleles: Array, p_draggable: bool = true, p_show
 		_update_display()
 	else:
 		_pending_display_update = true
+
+
+## Only the Allele Bank chips (no remove button) take focus; chips in a parent slot use their remove button.
+func _setup_keyboard() -> void:
+	if is_draggable and not show_remove_button:
+		focus_mode = Control.FOCUS_ALL
+		FocusRing.attach(self)
+	if remove_button:
+		FocusRing.attach(remove_button)
+		remove_button.tooltip_text = "Reset this gene"
 
 
 func _configure_input_passthrough() -> void:
@@ -98,6 +111,12 @@ func _on_remove_pressed() -> void:
 
 
 func _on_gui_input(event: InputEvent) -> void:
+	var key: InputEventKey = event as InputEventKey
+	if key != null and key.pressed and not key.echo and focus_mode == Control.FOCUS_ALL:
+		if key.keycode == KEY_A or key.keycode == KEY_B:
+			assign_requested.emit(gene_id, alleles.duplicate(), "A" if key.keycode == KEY_A else "B")
+			accept_event()
+		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			chip_clicked.emit(gene_id)

@@ -207,6 +207,13 @@ func _create_data_cell(genotype: Dictionary, index: int, cell_size: Vector2, low
 		genotype_label.add_theme_font_size_override("font_size", 9)
 		vbox.add_child(genotype_label)
 	
+	# The cell tint shows eye color, so say the phenotype in words too
+	var words: Array[String] = []
+	for spec_trait: String in HumanGeneticsState.get_traits_displayed():
+		if phenotype.has(spec_trait):
+			words.append(String(phenotype[spec_trait]).replace("_", " ").capitalize())
+	panel.tooltip_text = ", ".join(words)
+	
 	# Make clickable
 	panel.gui_input.connect(func(event):
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:

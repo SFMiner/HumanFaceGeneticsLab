@@ -14,6 +14,7 @@ signal face_clicked(human_id: int)
 signal drag_started(human_id: int)
 signal delete_requested(human_id: int)
 signal favorite_toggled(human_id: int)
+signal assign_requested(human_id: int, slot: String)
 
 # ============================================================================
 # NODE REFERENCES
@@ -46,6 +47,7 @@ func _ready() -> void:
 	_setup_connections()
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_configure_drag_passthrough()
+	_setup_keyboard()
 
 
 func _setup_connections() -> void:
@@ -55,6 +57,18 @@ func _setup_connections() -> void:
 		delete_button.pressed.connect(_on_delete_pressed)
 	
 	gui_input.connect(_on_gui_input)
+
+
+## Keyboard route for the drag: A / B make this human Parent A / B, Enter or Space opens the big face.
+func _setup_keyboard() -> void:
+	focus_mode = Control.FOCUS_ALL
+	FocusRing.attach(self, 4.0)
+	if favorite_button:
+		FocusRing.attach(favorite_button)
+		favorite_button.tooltip_text = "Favorite"
+	if delete_button:
+		FocusRing.attach(delete_button)
+		delete_button.tooltip_text = "Delete"
 
 
 func _configure_drag_passthrough() -> void:
@@ -155,6 +169,19 @@ func flash() -> void:
 # ============================================================================
 
 func _on_gui_input(event: InputEvent) -> void:
+	var key: InputEventKey = event as InputEventKey
+	if key != null and key.pressed and not key.echo and not key.ctrl_pressed and not key.alt_pressed:
+		match key.keycode:
+			KEY_A:
+				assign_requested.emit(_human_id, "A")
+				accept_event()
+			KEY_B:
+				assign_requested.emit(_human_id, "B")
+				accept_event()
+			KEY_ENTER, KEY_KP_ENTER, KEY_SPACE:
+				face_clicked.emit(_human_id)
+				accept_event()
+		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			if face_container and face_container.get_global_rect().has_point(event.global_position):

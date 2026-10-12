@@ -31,6 +31,8 @@ var _naming_mode: bool = false
 
 
 func _ready() -> void:
+	FocusRing.attach(random_name_button)
+	FocusRing.attach(confirm_button)
 	save_button.pressed.connect(_on_save_pressed)
 	random_name_button.pressed.connect(_on_random_name_pressed)
 	confirm_button.pressed.connect(_on_confirm_pressed)
@@ -265,6 +267,14 @@ func _on_confirm_pressed() -> void:
 
 func _on_name_submitted(_new_text: String) -> void:
 	_save_offspring()
+
+
+## Escape while naming a result: closes the name box and returns true; false when it was not open.
+func cancel_naming() -> bool:
+	if not _naming_mode:
+		return false
+	_on_cancel_pressed()
+	return true
 
 
 func _on_cancel_pressed() -> void:
