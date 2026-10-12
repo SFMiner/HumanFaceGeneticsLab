@@ -58,6 +58,26 @@ var _allow_generation: bool = true
 ## Low-spec mode
 var _low_spec_mode: bool = false
 
+## Class settings link (web): settings come from the page address, apply to this visit only and are never saved
+var _from_link: bool = false
+var _link_level: int = 1
+var _lock_level: bool = false
+var _link_notes: Array[String] = []
+
+## Link keys and the values each accepts. Keep in step with README "Class settings link" and the site's form.
+const LINK_KEYS: Dictionary = {
+	"level": "1-5",
+	"locklevel": "1",
+	"punnett": "full | ratios | single | hidden",
+	"genotypes": "show | hide",
+	"results": "offspring | probabilities",
+	"seed": "1-999999999",
+	"lockparents": "1",
+	"nonew": "1",
+	"maxgenes": "1-4",
+	"lowspec": "1",
+}
+
 # ============================================================================
 # LIFECYCLE
 # ============================================================================
@@ -65,6 +85,15 @@ var _low_spec_mode: bool = false
 func _ready() -> void:
 	_load_defaults()
 	_seeded_rng.seed = _random_seed
+	if OS.has_feature("web"):
+		apply_link_settings(_read_page_query())
+
+
+## The query string of the game's own address, or else of the play page around it (same origin on the sims site).
+func _read_page_query() -> String:
+	var js: String = "(function(){var q=window.location.search;if(!q){try{q=window.parent.location.search;}catch(e){q='';}}return q||'';})()"
+	var result: Variant = JavaScriptBridge.eval(js, true)
+	return result if result is String else ""
 
 
 ## Load defaults from JSON config
@@ -579,6 +608,109 @@ func export_session_snapshot() -> Dictionary:
 
 
 # ============================================================================
+# CLASS SETTINGS LINK
+# ============================================================================
+
+## Split "?a=1&b=two" into {"a": "1", "b": "two"}; keys lower-cased, values decoded and trimmed.
+static func parse_query(query: String) -> Dictionary:
+	var out: Dictionary = {}
+	for part: String in query.trim_prefix("?").split("&", false):
+		var eq: int = part.find("=")
+		var key: String = (part if eq < 0 else part.substr(0, eq)).uri_decode().strip_edges().to_lower()
+		var value: String = ("" if eq < 0 else part.substr(eq + 1)).uri_decode().strip_edges().to_lower()
+		if not key.is_empty():
+			out[key] = value
+	return out
+
+
+## Apply the recognised keys of a settings link. Unknown keys and bad values are ignored, so a mistyped link
+## still opens the game. Returns true when at least one setting was applied (Teacher Mode is then on).
+func apply_link_settings(query: String) -> bool:
+	var params: Dictionary = parse_query(query)
+	var notes: Array[String] = []
+	var level: int = _int_in(params.get("level", ""), 1, HumanGeneticsState.get_all_levels().size())
+	if level > 0:
+		_link_level = level
+		notes.append("Level %d" % level)
+	if params.get("locklevel", "") == "1":
+		_lock_level = true
+		notes.append("level locked")
+	match params.get("punnett", ""):
+		"full":
+			_punnett_display_mode = "full"
+			notes.append("full Punnett square")
+		"ratios":
+			_punnett_display_mode = "ratios"
+			notes.append("Punnett square shows ratios only")
+		"single":
+			_punnett_display_mode = "single_gene"
+			notes.append("Punnett square shows one gene")
+		"hidden":
+			_punnett_display_mode = "hidden"
+			notes.append("Punnett square hidden")
+	if params.get("genotypes", "") == "hide":
+		_trait_visibility = "phenotype"
+		notes.append("genotypes hidden")
+	elif params.get("genotypes", "") == "show":
+		_trait_visibility = "both"
+		notes.append("genotypes shown")
+	if params.get("results", "") == "probabilities":
+		_breeding_mode = "preview"
+		notes.append("probabilities only, no offspring")
+	elif params.get("results", "") == "offspring":
+		_breeding_mode = "random"
+		notes.append("offspring shown")
+	var seed_value: int = _int_in(params.get("seed", ""), 1, 999999999)
+	if seed_value > 0:
+		_deterministic_mode = true
+		_random_seed = seed_value
+		_seeded_rng.seed = seed_value
+		notes.append("same results for everyone (seed %d)" % seed_value)
+	if params.get("lockparents", "") == "1":
+		_lock_parents = true
+		notes.append("parents lock after recombining")
+	if params.get("nonew", "") == "1":
+		_allow_generation = false
+		notes.append("no new random humans")
+	var max_genes: int = _int_in(params.get("maxgenes", ""), 1, 4)
+	if max_genes > 0:
+		_max_genes_per_cross = max_genes
+		notes.append("up to %d genes per cross" % max_genes)
+	if params.get("lowspec", "") == "1":
+		_low_spec_mode = true
+		notes.append("simpler drawing")
+	if notes.is_empty():
+		return false
+	_from_link = true
+	_link_notes = notes
+	_active = true
+	teacher_mode_toggled.emit(true)
+	constraints_changed.emit()
+	return true
+
+
+## A whole number in [lo, hi], or 0 when the text is not one.
+static func _int_in(text: String, lo: int, hi: int) -> int:
+	if not text.is_valid_int():
+		return 0
+	var n: int = text.to_int()
+	return n if n >= lo and n <= hi else 0
+
+
+func is_from_link() -> bool:
+	return _from_link
+
+
+## The level a settings link starts on (1 without a link).
+func get_link_level() -> int:
+	return _link_level
+
+
+func is_level_locked() -> bool:
+	return _from_link and _lock_level
+
+
+# ============================================================================
 # STATUS SUMMARY
 # ============================================================================
 
@@ -586,6 +718,8 @@ func export_session_snapshot() -> Dictionary:
 func get_status_summary() -> String:
 	if not _active:
 		return ""
+	if _from_link:
+		return "Class settings from your teacher's link: " + ", ".join(_link_notes)
 	
 	var parts: Array = []
 	parts.append("Active genes: %s" % ", ".join(get_active_genes()))
@@ -605,6 +739,8 @@ func get_status_summary() -> String:
 
 ## Save current state to user data
 func _save_state() -> void:
+	if _from_link:
+		return
 	var data: Dictionary = {
 		"active": _active,
 		"active_genes": _active_genes,

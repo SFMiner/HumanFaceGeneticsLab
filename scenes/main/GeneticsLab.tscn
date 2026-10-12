@@ -100,13 +100,6 @@ layout_mode = 2
 layout_mode = 2
 text = "Manual"
 
-[node name="Sep3" type="VSeparator" parent="MainVBox/TopBar/VBox/HBox"]
-layout_mode = 2
-
-[node name="AdminButton" type="Button" parent="MainVBox/TopBar/VBox/HBox"]
-layout_mode = 2
-text = "Admin"
-
 [node name="TeacherModeBanner" type="PanelContainer" parent="MainVBox/TopBar/VBox"]
 visible = false
 layout_mode = 2
@@ -191,9 +184,6 @@ z_index = 100
 layout_mode = 0
 offset_right = 280.0
 
-[node name="AdminPinPopup" type="PopupPanel" parent="."]
-size = Vector2i(360, 160)
-
 [node name="ManualPopup" type="PopupPanel" parent="."]
 size = Vector2i(760, 560)
 visible = false
@@ -233,40 +223,6 @@ bbcode_enabled = true
 fit_content = false
 scroll_active = true
 scroll_following = false
-
-[node name="PanelContainer" type="PanelContainer" parent="AdminPinPopup"]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 356.0
-offset_bottom = 156.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="VBox" type="VBoxContainer" parent="AdminPinPopup/PanelContainer"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="PromptLabel" type="Label" parent="AdminPinPopup/PanelContainer/VBox"]
-layout_mode = 2
-text = "Enter admin PIN:"
-
-[node name="PinInput" type="LineEdit" parent="AdminPinPopup/PanelContainer/VBox"]
-layout_mode = 2
-placeholder_text = "PIN"
-secret = true
-
-[node name="ButtonRow" type="HBoxContainer" parent="AdminPinPopup/PanelContainer/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="UnlockButton" type="Button" parent="AdminPinPopup/PanelContainer/VBox/ButtonRow"]
-layout_mode = 2
-text = "Unlock"
-
-[node name="CancelButton" type="Button" parent="AdminPinPopup/PanelContainer/VBox/ButtonRow"]
-layout_mode = 2
-text = "Cancel"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false

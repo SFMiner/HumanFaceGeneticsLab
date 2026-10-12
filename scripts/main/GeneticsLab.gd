@@ -25,17 +25,12 @@ signal teacher_mode_requested()
 @onready var teacher_mode_status: Label = $MainVBox/TopBar/VBox/TeacherModeBanner/StatusLabel
 @onready var footer_disclaimer: Label = $MainVBox/FooterDisclaimer
 @onready var teacher_mode_panel: Control = $TeacherModePanel
-@onready var admin_button: Button = $MainVBox/TopBar/VBox/HBox/AdminButton
 @onready var manual_button: Button = $MainVBox/TopBar/VBox/HBox/ManualButton
 @onready var face_preview_popup: PopupPanel = $FacePreviewPopup
 #@onready var face_preview_name: Label = $FacePreviewPopup/PanelContainer/VBoxContainer/NameLabel
 @onready var face_preview_face: Control = $FacePreviewPopup/PanelContainer/VBoxContainer/FacePreviewContainer/FacePreview
 @onready var face_preview_close: Button = $FacePreviewPopup/PanelContainer/VBoxContainer/CloseButton
 @onready var tutorial_panel: Control = $TutorialPanel
-@onready var admin_pin_popup: PopupPanel = $AdminPinPopup
-@onready var admin_pin_input: LineEdit = $AdminPinPopup/PanelContainer/VBox/PinInput
-@onready var admin_unlock_button: Button = $AdminPinPopup/PanelContainer/VBox/ButtonRow/UnlockButton
-@onready var admin_cancel_button: Button = $AdminPinPopup/PanelContainer/VBox/ButtonRow/CancelButton
 @onready var manual_popup: PopupPanel = $ManualPopup
 @onready var manual_close_button: Button = $ManualPopup/PanelContainer/VBox/Header/CloseButton
 @onready var manual_text: RichTextLabel = $ManualPopup/PanelContainer/VBox/Scroll/ManualText
@@ -51,11 +46,9 @@ var _tutorial_step_index: int = -1
 var _tutorial_active: bool = false
 var _tutorial_anchors: Dictionary = {}
 var _tutorial_parents_filled: Dictionary = {"A": false, "B": false}
-var _admin_enabled: bool = false
+var _teacher_panel_allowed: bool = false
 
 const TUTORIAL_STATE_PATH := "user://tutorial_state.json"
-const ADMIN_HASH := "#admin"
-const ADMIN_PIN := "1234"
 const MANUAL_PATH := "res://docs/MANUAL.md"
 
 ## Tab order, close_topmost() and the keyboard exit live in KeyboardNav (scripts/ui/KeyboardNav.gd).
@@ -70,10 +63,10 @@ func _ready() -> void:
 	_populate_level_dropdown()
 	_update_teacher_mode_ui()
 	_update_footer_disclaimer()
-	_apply_admin_access()
+	_apply_teacher_access()
 	
-	# Initial level
-	HumanGeneticsState.set_level(1)
+	# Initial level: 1, or the one a class settings link names (TeacherModeState.apply_link_settings)
+	_start_level(TeacherModeState.get_link_level())
 	
 	_setup_tutorial_anchors()
 	_load_tutorial_data()
@@ -96,12 +89,12 @@ func first_stops() -> Array:
 
 
 func popup_open() -> bool:
-	return admin_pin_popup.visible or manual_popup.visible or face_preview_popup.visible
+	return manual_popup.visible or face_preview_popup.visible
 
 
 ## Escape: closes the innermost open thing and returns true; returns false when nothing is open.
 func close_topmost() -> bool:
-	for popup: Window in [admin_pin_popup, manual_popup, face_preview_popup]:
+	for popup: Window in [manual_popup, face_preview_popup]:
 		if popup.visible:
 			popup.hide()
 			return true
@@ -125,16 +118,6 @@ func _setup_connections() -> void:
 	teacher_mode_button.pressed.connect(_on_teacher_mode_button_pressed)
 	TeacherModeState.teacher_mode_toggled.connect(_on_teacher_mode_toggled)
 	TeacherModeState.constraints_changed.connect(_on_teacher_constraints_changed)
-	
-	# Admin PIN
-	if admin_button:
-		admin_button.pressed.connect(_on_admin_button_pressed)
-	if admin_unlock_button:
-		admin_unlock_button.pressed.connect(_on_admin_unlock_pressed)
-	if admin_cancel_button:
-		admin_cancel_button.pressed.connect(_on_admin_cancel_pressed)
-	if admin_pin_input:
-		admin_pin_input.text_submitted.connect(_on_admin_pin_submitted)
 	
 	if manual_button:
 		manual_button.pressed.connect(_on_manual_button_pressed)
@@ -233,7 +216,7 @@ func _update_footer_disclaimer() -> void:
 
 
 func _on_teacher_mode_button_pressed() -> void:
-	if not _admin_enabled:
+	if not _teacher_panel_allowed:
 		return
 	_teacher_panel_visible = not _teacher_panel_visible
 	if teacher_mode_panel:
@@ -269,63 +252,36 @@ func _on_teacher_constraints_changed() -> void:
 	_tutorial_reset_parent_flags()
 
 
-func _apply_admin_access() -> void:
-	_admin_enabled = false
-	if OS.get_name() == "Web":
-		_admin_enabled = _get_location_hash().findn(ADMIN_HASH) >= 0
-	
+## The in-game Teacher Mode panel is for desktop and editor runs only. Web builds take teacher settings from a
+## class settings link (no PIN: anything in the build can be read, and the panel only changed one browser).
+func _apply_teacher_access() -> void:
+	_teacher_panel_allowed = OS.is_debug_build() and not OS.has_feature("web") and not TeacherModeState.is_from_link()
 	if teacher_mode_button:
-		teacher_mode_button.visible = _admin_enabled
-	if admin_button:
-		admin_button.visible = true
-	
-	if not _admin_enabled and teacher_mode_panel:
+		teacher_mode_button.visible = _teacher_panel_allowed
+	if not _teacher_panel_allowed and teacher_mode_panel:
 		teacher_mode_panel.visible = false
 		_teacher_panel_visible = false
 
 
-func _get_location_hash() -> String:
-	var hash_value: String = ""
-	if Engine.has_singleton("JavaScriptBridge"):
-		var result : String = JavaScriptBridge.eval("window.location.hash", true)
-		if result is String:
-			hash_value = result
-	return hash_value
-
-
-func _on_admin_button_pressed() -> void:
-	if not admin_pin_popup:
-		return
-	admin_pin_popup.popup_centered(Vector2(360, 160))
-	if admin_pin_input:
-		admin_pin_input.text = ""
-		admin_pin_input.grab_focus()
-
-
-func _on_admin_unlock_pressed() -> void:
-	_try_unlock_admin()
-
-
-func _on_admin_pin_submitted(_text: String) -> void:
-	_try_unlock_admin()
-
-
-func _on_admin_cancel_pressed() -> void:
-	if admin_pin_popup:
-		admin_pin_popup.hide()
-
-
-func _try_unlock_admin() -> void:
-	if not admin_pin_input:
-		return
-	if admin_pin_input.text == ADMIN_PIN:
-		_admin_enabled = true
-		if teacher_mode_button:
-			teacher_mode_button.visible = true
-		if admin_pin_popup:
-			admin_pin_popup.hide()
-	else:
-		admin_pin_input.text = ""
+## Select a level in the dropdown and the state; a link with locklevel=1 keeps students on it.
+func _start_level(level_id: int) -> void:
+	var index: int = 0
+	for i: int in range(level_dropdown.item_count):
+		if level_dropdown.get_item_id(i) == level_id:
+			index = i
+			break
+	if level_dropdown.item_count > 0:
+		level_dropdown.select(index)
+		level_id = level_dropdown.get_item_id(index)
+	HumanGeneticsState.set_level(level_id)
+	if level_id != 1:
+		if library_panel:
+			library_panel.refresh()
+		if breeding_area:
+			breeding_area.on_level_changed(level_id)
+	level_dropdown.disabled = TeacherModeState.is_level_locked()
+	if level_dropdown.disabled:
+		level_dropdown.tooltip_text = "Your teacher's link sets the level."
 
 
 func _load_manual_text() -> String:

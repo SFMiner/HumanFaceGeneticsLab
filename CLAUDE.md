@@ -33,6 +33,10 @@ This file is the single copy of the project conventions; AGENTS.md only points h
 - Tab order and the keyboard exit live in `scripts/ui/KeyboardNav.gd`: it builds the Tab list from visible focusable controls in tree order (tutorial box first), so new controls join automatically. `GeneticsLab.close_topmost()` decides what Escape closes. `FocusRing.attach()` gives cards/TextureButtons their focus outline (theme `focus` style is yellow for the rest).
 - Anything done by drag needs an A / B key route (see `HumanCard.assign_requested`, `AlleleChip.assign_requested`).
 - Web export uses the 2D + GUI template (OptionButton, RichTextLabel, SpinBox); `docs/MANUAL.md` is shipped via `include_filter` because `.md` is not a resource. Loose images in the folder root (screenshots, `faces_level*.jpg`, a personal schedule) are excluded by `*.jpg`; move them out of the project when convenient.
+- **No PIN or admin mode (Sean, 2026-10-12).** Web builds get teacher settings only from a class settings link
+  (`TeacherModeState.apply_link_settings`, keys in `LINK_KEYS` and the README table); the Teacher Mode panel is for
+  desktop debug runs. A new link key must change gameplay (several Teacher Mode setters are not wired to the UI) and
+  must be added to the site's form via game-sim-server.
 - Header text uses `assets/fonts/header_font_web.tres` (header font + fallback): the web text server draws a hex box for U+2006, which the plain header font lacks.
 
 ## Commit & Pull Request Guidelines

@@ -20,8 +20,8 @@ On first run, a tutorial can guide you through generating humans, selecting pare
 4. Click **Recombine** to generate an offspring.
 5. Click **Save to Library** to name and store the offspring.
 
-## Teacher Mode (Admin)
-Teacher Mode controls visibility and constraints (gene availability, Punnett display, recombination rules). In web builds, Teacher Mode is locked by default. Click **Admin** and enter the PIN to unlock Teacher Mode. Local settings are saved in the browser on that device.
+## Class settings (for teachers)
+On the website there is no Teacher Mode button and no password. Instead, a teacher gives the class a link that sets up the game, for example to start everyone on one level, show only ratios in the Punnett square, or give every student the same results. Build the link on the game's page on the website (under "For teachers") and post it for your class. When a link sets things up, a green banner at the top lists the settings. The settings last for that visit only; opening the game without the link gives the standard game.
 
 ## Levels and Purpose
 1. **Eye Color Basics**: Introduces TYR, OCA2, and HERC2 to show dominance and epistasis in eye color.
