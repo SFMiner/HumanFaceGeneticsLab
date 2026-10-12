@@ -75,7 +75,6 @@ const LINK_KEYS: Dictionary = {
 	"lockparents": "1",
 	"nonew": "1",
 	"maxgenes": "1-4",
-	"lowspec": "1",
 }
 
 # ============================================================================
@@ -676,9 +675,6 @@ func apply_link_settings(query: String) -> bool:
 	if max_genes > 0:
 		_max_genes_per_cross = max_genes
 		notes.append("up to %d genes per cross" % max_genes)
-	if params.get("lowspec", "") == "1":
-		_low_spec_mode = true
-		notes.append("simpler drawing")
 	if notes.is_empty():
 		return false
 	_from_link = true

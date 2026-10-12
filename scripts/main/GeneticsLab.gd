@@ -53,6 +53,7 @@ const MANUAL_PATH := "res://docs/MANUAL.md"
 
 ## Tab order, close_topmost() and the keyboard exit live in KeyboardNav (scripts/ui/KeyboardNav.gd).
 var keyboard: KeyboardNav = null
+var settings_menu: SettingsMenu = null
 
 # ============================================================================
 # LIFECYCLE
@@ -68,6 +69,7 @@ func _ready() -> void:
 	# Initial level: 1, or the one a class settings link names (TeacherModeState.apply_link_settings)
 	_start_level(TeacherModeState.get_link_level())
 	
+	_setup_settings_menu()
 	_setup_tutorial_anchors()
 	_load_tutorial_data()
 	_setup_keyboard()
@@ -89,12 +91,12 @@ func first_stops() -> Array:
 
 
 func popup_open() -> bool:
-	return manual_popup.visible or face_preview_popup.visible
+	return manual_popup.visible or face_preview_popup.visible or settings_menu.visible
 
 
 ## Escape: closes the innermost open thing and returns true; returns false when nothing is open.
 func close_topmost() -> bool:
-	for popup: Window in [manual_popup, face_preview_popup]:
+	for popup: Window in [manual_popup, face_preview_popup, settings_menu]:
 		if popup.visible:
 			popup.hide()
 			return true
@@ -323,9 +325,63 @@ func _bold_markers(text: String) -> String:
 # SETTINGS
 # ============================================================================
 
+func _setup_settings_menu() -> void:
+	settings_menu = SettingsMenu.new()
+	settings_menu.name = "SettingsMenu"
+	settings_menu.visible = false
+	add_child(settings_menu)
+	settings_menu.new_game_confirmed.connect(_new_game)
+	settings_menu.tutorial_requested.connect(_replay_tutorial)
+	settings_menu.still_tutorial_changed.connect(_on_still_tutorial_changed)
+
+
 func _on_settings_button_pressed() -> void:
-	# TODO: Open settings panel
-	print("Settings button pressed")
+	var level_id: int = _new_game_level()
+	var level_name: String = ""
+	for level: Dictionary in HumanGeneticsState.get_all_levels():
+		if level.get("id", 0) == level_id:
+			level_name = level.get("name", "")
+	settings_menu.open("Level %d (%s)" % [level_id, level_name])
+
+
+## A New game starts on Level 1, or on the level a class settings link names.
+func _new_game_level() -> int:
+	return TeacherModeState.get_link_level() if TeacherModeState.is_from_link() else 1
+
+
+## Empties the library and the Recombination Area, goes back to the starting level and offers the tutorial again.
+## Text size and the still tutorial box are kept; so are a class settings link's settings.
+func _new_game() -> void:
+	_end_tutorial()
+	var level_id: int = _new_game_level()
+	_start_level(level_id)
+	TeacherModeState.session_reset()
+	if library_panel:
+		library_panel.refresh()
+	if breeding_area:
+		breeding_area.on_level_changed(level_id)
+	_tutorial_reset_parent_flags()
+	if FileAccess.file_exists(TUTORIAL_STATE_PATH):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(TUTORIAL_STATE_PATH))
+	_begin_tutorial_flow()
+
+
+func _replay_tutorial() -> void:
+	_end_tutorial()
+	_start_tutorial()
+
+
+func _on_still_tutorial_changed(_still: bool) -> void:
+	if tutorial_panel != null and tutorial_panel.visible:
+		_blink_tutorial()
+
+
+## The tutorial box fades to draw the eye, unless the player asked for it to stay still.
+func _blink_tutorial() -> void:
+	tutorial_panel.stop_blink()
+	tutorial_panel.modulate = Color(1, 1, 1)
+	if not settings_menu.still_tutorial:
+		tutorial_panel.start_blink(Color(1, 1, 1), Color(1, 0.85, 0.65))
 
 
 # ============================================================================
@@ -424,7 +480,7 @@ func _begin_tutorial_flow() -> void:
 		var remember_label: String = prompt.get("remember_label", "Remember this")
 		tutorial_panel.show_prompt(text, yes_label, no_label, remember_label)
 		_center_tutorial_panel()
-		tutorial_panel.start_blink(Color(1, 1, 1), Color(1, 0.85, 0.65))
+		_blink_tutorial()
 
 
 func _should_skip_tutorial() -> bool:
@@ -475,7 +531,7 @@ func _show_current_tutorial_step() -> void:
 	var show_not_now: bool = step.get("show_not_now", false)
 	var show_close: bool = step.get("show_close", false)
 	tutorial_panel.show_step(text, show_not_now, show_close)
-	tutorial_panel.start_blink(Color(1, 1, 1), Color(1, 0.85, 0.65))
+	_blink_tutorial()
 	_position_tutorial_panel(step)
 
 

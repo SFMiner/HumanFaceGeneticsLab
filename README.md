@@ -36,16 +36,18 @@ An educational genetics simulator for Godot 4.5 that teaches polygenic inheritan
 - [x] Library of humans, parent slots, allele chips, Punnett square, recombination, save to library
 - [x] Class settings link (web): the teacher's link sets the level and Teacher Mode constraints for that visit; no PIN or Admin button (see "Class settings link" below)
 - [x] Teacher Mode panel for desktop and editor runs only (hidden in web builds and whenever a link is used)
-- [ ] Site form under "For teachers" that builds the link (game-sim-server)
+- [x] Site form that builds the link (game-sim-server, live 2026-10-12 at `/games/<slug>/teachers`; the game's settings list goes in at import)
 - [ ] Later: settings saved with the teacher's account for a class (site slice 5 accounts)
 - [x] In-game Manual (`docs/MANUAL.md`, shipped in the web export)
 - [x] Keyboard: Tab / Shift+Tab through every control, yellow focus outline, A / B on a library card or Allele Bank chip fill Parent A / B (the keyboard route for the drag), Enter on a card enlarges the face
 - [x] Keyboard exit for the sims site: Escape closes the innermost open thing (popup, Teacher Mode panel, naming box, tutorial) then leaves; Tab past the last control and Shift+Tab before the first leave (`sims:leave-game`)
-- [x] No sound, no fast flashing (the tutorial box fades about once a second)
+- [x] No sound, no fast flashing (the tutorial box fades about once a second; Settings can keep it still)
 - [x] Scales to small frames (`canvas_items` stretch, `expand` aspect); the Recombination Area scrolls when the frame is short
 - [x] Web export with the 2D + GUI template (`export_presets.cfg`, preset "Web", exports to `../exports/human-face-genetics/`)
-- [x] Headless tests: `GODOT=<godot 4.5 binary> ./tests/run_all_tests.sh` (keyboard, link settings, smoke)
-- [ ] Settings button (does nothing yet; prints a message). Candidate: a student-facing "Simpler drawing" toggle, since `lowspec` is otherwise only in the class link
+- [x] Headless tests: `GODOT=<godot 4.5 binary> ./tests/run_all_tests.sh` (keyboard, link settings, settings menu, smoke)
+- [x] Settings menu (`scripts/ui/SettingsMenu.gd`): New game (asks first; empties the library, back to Level 1 or the link's level, tutorial prompt again), Show the tutorial, text size (Normal / Large / Larger, window content scale 1.0 / 1.15 / 1.3), keep the tutorial box still. Text size and the still box are saved for the browser in `user://player_settings.json`
+- [x] Sharp on high-DPI screens: `allow_hidpi` left at its default (on); off, the web canvas drew at CSS pixels and the browser stretched it
+- [ ] Low-spec mode is not wired: `TeacherModeState.is_low_spec_mode()` changes nothing on screen, so it is out of the class link
 - [ ] Punnett cell colour is supplementary only (tooltip names the phenotype); no keyboard route to click a cell
 
 ## Getting Started
@@ -124,7 +126,6 @@ turns Teacher Mode on with a banner listing them. Unknown keys and bad values ar
 | `lockparents` | 1 | Parents can't be swapped after recombining |
 | `nonew` | 1 | No new random humans |
 | `maxgenes` | 1-4 | Most genes in one Punnett square |
-| `lowspec` | 1 | Simpler drawing for slow computers |
 
 ## Technical Requirements
 

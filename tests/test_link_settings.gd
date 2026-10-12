@@ -5,7 +5,7 @@ extends SceneTree
 var _passed: int = 0
 var _failed: int = 0
 
-const FULL_LINK: String = "?level=3&locklevel=1&punnett=ratios&genotypes=hide&results=probabilities&seed=42&lockparents=1&nonew=1&maxgenes=2&lowspec=1&utm_source=x"
+const FULL_LINK: String = "?level=3&locklevel=1&punnett=ratios&genotypes=hide&results=probabilities&seed=42&lockparents=1&nonew=1&maxgenes=2&utm_source=x"
 const SAVE_PATH: String = "user://teacher_mode_state.json"
 
 
@@ -49,7 +49,6 @@ func _run() -> void:
 	_check(tm.are_parents_locked(), "lockparents=1")
 	_check(tm.is_generation_locked(), "nonew=1")
 	_check(tm.get_max_genes_per_cross() == 2, "maxgenes=2")
-	_check(tm.is_low_spec_mode(), "lowspec=1")
 	var summary: String = tm.get_status_summary()
 	_check(summary.begins_with("Class settings from your teacher's link") and summary.contains("seed 42"), "banner text names the settings")
 

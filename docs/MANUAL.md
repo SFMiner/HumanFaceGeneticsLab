@@ -13,6 +13,15 @@ This simulator lets learners explore simplified human genetics through recombina
 ## Tutorial
 On first run, a tutorial can guide you through generating humans, selecting parents, using allele chips, and recombining. Choose **Skip Tutorial?** if you want to skip it.
 
+## Settings
+Click **Settings** at the top right.
+- **New game**: deletes every human in your library and starts again at Level 1 (or the level your teacher's link sets). It asks before deleting anything.
+- **Show the tutorial**: runs the tutorial again from the start.
+- **Text size**: Normal, Large or Larger. With larger text some panels scroll.
+- **Keep the tutorial box still**: stops the tutorial box from fading in and out.
+
+Text size and the still tutorial box are remembered on this computer.
+
 ## Recombination Workflow
 1. Click **+ Generate Random Human** to add a human to the library.
 2. Drag a human to each parent slot.
