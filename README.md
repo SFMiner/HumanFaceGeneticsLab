@@ -45,7 +45,7 @@ An educational genetics simulator for Godot 4.5 that teaches polygenic inheritan
 - [x] Scales to small frames (`canvas_items` stretch, `expand` aspect); the Recombination Area scrolls when the frame is short
 - [x] Web export with the 2D + GUI template (`export_presets.cfg`, preset "Web", exports to `../exports/human-face-genetics/`)
 - [x] Headless tests: `GODOT=<godot 4.5 binary> ./tests/run_all_tests.sh` (keyboard, link settings, smoke)
-- [ ] Settings button (does nothing yet; prints a message)
+- [ ] Settings button (does nothing yet; prints a message). Candidate: a student-facing "Simpler drawing" toggle, since `lowspec` is otherwise only in the class link
 - [ ] Punnett cell colour is supplementary only (tooltip names the phenotype); no keyboard route to click a cell
 
 ## Getting Started
